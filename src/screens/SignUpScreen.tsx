@@ -70,10 +70,10 @@ export default function SignUpScreen() {
 						onPress={handleSubmit}
 					/>
 					<View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-						<Text style={{ fontSize: 16, color: theme.primary, fontFamily: "sfMedium" }}>
+						<Text style={{ fontSize: 15, color: theme.primary, fontFamily: "sfMedium" }}>
 							Already have an account?
 						</Text>
-						<CustomTextButton label="Log in" />
+						<CustomTextButton label="Log in" labelStyle={{ fontSize: 15 }} />
 					</View>
 				</View>
 			</KeyboardAwareScrollView>
