@@ -22,7 +22,6 @@ export default function CustomTextInput({ onChangeText, placeholder, ...props }:
 				borderColor: theme.faded,
 				backgroundColor: "transparent",
 				borderWidth: 1,
-				borderRadius: 8,
 			}}
 			onChangeText={onChangeText}
 			{...props}

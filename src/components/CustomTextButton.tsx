@@ -23,7 +23,7 @@ type Props = {
 	iconProps?: any;
 } & TouchableOpacityProps;
 
-export default function CustomButton({
+export default function CustomTextButton({
 	disabled,
 	label = "Button",
 	style,
@@ -45,13 +45,12 @@ export default function CustomButton({
 			disabled={disabled}
 			style={[
 				{
-					backgroundColor: theme.gold,
-					width: "100%",
-					height: 50,
 					alignItems: "center",
-					justifyContent: "center",
+					// justifyContent: "center",
 					flexDirection: "row",
 					gap: 3,
+					borderBottomColor: theme.gold,
+					borderBottomWidth: 1,
 				},
 				style,
 			]}
@@ -59,7 +58,7 @@ export default function CustomButton({
 			{...props}
 		>
 			{leftIcon && <Icon {...iconProps} />}
-			<Text style={[{ fontSize: 16, color: theme.secondary, fontFamily: "sfMedium" }, labelStyle]}>
+			<Text style={[{ fontSize: 16, color: theme.gold, fontFamily: "sfMedium" }, labelStyle]}>
 				{label}
 			</Text>
 			{rightIcon && <Icon {...iconProps} />}
