@@ -6,6 +6,7 @@ import {
 	GestureResponderEvent,
 	TextStyle,
 	TouchableOpacityProps,
+	ActivityIndicator,
 } from "react-native";
 import React from "react";
 import useTheme from "../hooks/useTheme";
@@ -21,6 +22,7 @@ type Props = {
 	leftIcon?: any;
 	rightIcon?: any;
 	iconProps?: any;
+	isLoading?: boolean;
 } & TouchableOpacityProps;
 
 export default function CustomButton({
@@ -33,6 +35,7 @@ export default function CustomButton({
 	leftIcon,
 	rightIcon,
 	iconProps,
+	isLoading,
 	...props
 }: Props) {
 	const theme = themeConfig(useTheme().theme);
@@ -42,27 +45,36 @@ export default function CustomButton({
 	return (
 		<TouchableOpacity
 			activeOpacity={activeOpacity}
-			disabled={disabled}
+			disabled={disabled || isLoading}
 			style={[
 				{
-					backgroundColor: theme.gold,
+					backgroundColor: disabled || isLoading ? theme.disabled : theme.gold,
 					width: "100%",
 					height: 50,
 					alignItems: "center",
 					justifyContent: "center",
 					flexDirection: "row",
 					gap: 3,
+					borderRadius: 4,
 				},
 				style,
 			]}
 			onPress={onPress}
 			{...props}
 		>
-			{leftIcon && <Icon {...iconProps} />}
-			<Text style={[{ fontSize: 16, color: theme.secondary, fontFamily: "sfMedium" }, labelStyle]}>
-				{label}
-			</Text>
-			{rightIcon && <Icon {...iconProps} />}
+			{isLoading ? (
+				<ActivityIndicator size="small" color={theme.secondary} />
+			) : (
+				<>
+					{leftIcon && <Icon {...iconProps} />}
+					<Text
+						style={[{ fontSize: 16, color: theme.secondary, fontFamily: "sfMedium" }, labelStyle]}
+					>
+						{label}
+					</Text>
+					{rightIcon && <Icon {...iconProps} />}
+				</>
+			)}
 		</TouchableOpacity>
 	);
 }

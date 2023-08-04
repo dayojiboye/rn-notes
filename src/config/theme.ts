@@ -10,6 +10,7 @@ const lightTheme = {
 	muted: "#eee",
 	disabled: "#949191",
 	gold: "#C29B0C",
+	red: "red",
 };
 
 const darkTheme = {
@@ -22,6 +23,7 @@ const darkTheme = {
 	muted: "#eee",
 	disabled: "#949191",
 	gold: "#C29B0C",
+	red: "red",
 };
 
 const themeConfig = (value: string) => {

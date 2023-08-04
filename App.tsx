@@ -8,6 +8,10 @@ import useTheme from "./src/hooks/useTheme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import AppRoutes from "./src/config/routes";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import "./firebase/firebaseConfig";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,15 +48,25 @@ export default function App() {
 		return null;
 	}
 
+	const queryClient = new QueryClient({
+		defaultOptions: { queries: { refetchOnWindowFocus: false, retry: 1 } },
+	});
+
 	return (
-		<ThemeProvider>
-			<SafeAreaProvider onLayout={onLayoutRootView}>
-				<BottomSheetModalProvider>
-					<NavigationContainer>
-						<AppRoutes />
-					</NavigationContainer>
-				</BottomSheetModalProvider>
-			</SafeAreaProvider>
-		</ThemeProvider>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider>
+				<SafeAreaProvider onLayout={onLayoutRootView}>
+					<GestureHandlerRootView style={{ flex: 1 }}>
+						<BottomSheetModalProvider>
+							<NavigationContainer>
+								<RootSiblingParent>
+									<AppRoutes />
+								</RootSiblingParent>
+							</NavigationContainer>
+						</BottomSheetModalProvider>
+					</GestureHandlerRootView>
+				</SafeAreaProvider>
+			</ThemeProvider>
+		</QueryClientProvider>
 	);
 }

@@ -6,11 +6,13 @@ import NotesListScreen from "./NotesListScreen";
 import ProfileScreen from "./ProfileScreen";
 import themeConfig from "../config/theme";
 import useTheme from "../hooks/useTheme";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 const Tab = createBottomTabNavigator();
 
 export default function Home() {
 	const theme = themeConfig(useTheme().theme);
+	const { user } = useAuthentication();
 
 	return (
 		<Tab.Navigator
@@ -36,7 +38,7 @@ export default function Home() {
 					tabBarIcon: (props) => (
 						<Image
 							source={{
-								uri: "https://api.dicebear.com/6.x/adventurer/png?seed=Zoe",
+								uri: ``,
 							}}
 							style={{
 								borderRadius: 18,

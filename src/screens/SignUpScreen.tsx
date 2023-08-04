@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity, Keyboard, ScrollView, Image } from "react-native";
 import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
@@ -8,14 +8,41 @@ import CustomTextInput from "../components/CustomTextInput";
 import CustomButton from "../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomTextButton from "../components/CustomTextButton";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Backdrop from "../components/Backdrop";
+import { avatarList } from "../utils/mockData";
+import { mailFormat } from "../utils/helpers";
+import useSignUpMutation from "../hooks/useSignUp";
 
 export default function SignUpScreen() {
 	const theme = themeConfig(useTheme().theme);
+	const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
 	const [formValues, setFormValues] = React.useState({
 		name: "",
 		email: "",
+		password: "",
+		avatar: "",
 	});
+
+	const isDisabled: boolean =
+		!formValues.name.trim() ||
+		!formValues.email.trim() ||
+		!formValues.email.trim().match(mailFormat) ||
+		!formValues.password ||
+		!formValues.avatar;
+
+	const signupMutation = useSignUpMutation(formValues.name, formValues.avatar);
+
+	const openBottomsheet = React.useCallback(() => {
+		Keyboard.dismiss();
+		bottomSheetModalRef.current?.present();
+	}, []);
+
+	const closeBottomsheet = React.useCallback(() => {
+		Keyboard.dismiss();
+		bottomSheetModalRef.current?.close();
+	}, []);
 
 	const handleChange = (name: string, value: string) => {
 		setFormValues({
@@ -25,8 +52,9 @@ export default function SignUpScreen() {
 	};
 
 	const handleSubmit = () => {
-		if (!formValues.name.trim() || !formValues.email.trim()) return;
-		console.log(formValues);
+		if (isDisabled) return;
+		// console.log(formValues);
+		signupMutation.mutate({ email: formValues.email, password: formValues.password });
 	};
 
 	return (
@@ -51,20 +79,70 @@ export default function SignUpScreen() {
 				>
 					Sign Up
 				</Text>
-				<Text style={{ textAlign: "center", fontSize: 16, marginTop: 7, color: theme.primary }}>
+				<Text
+					style={{
+						textAlign: "center",
+						fontSize: 16,
+						marginTop: 7,
+						color: theme.primary,
+						fontFamily: "sf",
+					}}
+				>
 					Fill in your details to register
 				</Text>
 				<View style={{ marginTop: 32, width: "100%", gap: 16 }}>
 					<CustomTextInput
-						placeholder="John"
+						placeholder="Enter Your Name"
 						onChangeText={(value: string) => handleChange("name", value)}
 					/>
 					<CustomTextInput
-						placeholder="johndoe@test.com"
+						placeholder="Enter Your E-mail"
 						onChangeText={(value: string) => handleChange("email", value)}
+						autoCapitalize="none"
 					/>
+					<CustomTextInput
+						placeholder="Enter Your Password"
+						onChangeText={(value: string) => handleChange("password", value)}
+						isPassword
+					/>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						style={{
+							borderWidth: 1,
+							borderRadius: 4,
+							borderColor: theme.faded,
+							paddingHorizontal: 12,
+							paddingVertical: 16,
+							justifyContent: "center",
+							maxHeight: 50,
+						}}
+						onPress={openBottomsheet}
+					>
+						{formValues.avatar ? (
+							<Image
+								source={{
+									uri: `https://api.dicebear.com/6.x/adventurer/png?seed=${formValues.avatar}`,
+								}}
+								style={{
+									width: 28,
+									height: 28,
+									objectFit: "contain",
+									borderRadius: 28 / 2,
+									borderWidth: 1,
+									borderColor: theme.gold,
+									backgroundColor: theme.gold,
+								}}
+							/>
+						) : (
+							<Text style={{ fontSize: 16, fontFamily: "sf", color: theme.primary }}>
+								Select an avatar
+							</Text>
+						)}
+					</TouchableOpacity>
 					<CustomButton
 						label="Submit"
+						isLoading={signupMutation.isLoading}
+						disabled={isDisabled}
 						rightIcon={Icon}
 						iconProps={{ color: theme.secondary, size: 16, name: "arrow-right" }}
 						onPress={handleSubmit}
@@ -77,6 +155,50 @@ export default function SignUpScreen() {
 					</View>
 				</View>
 			</KeyboardAwareScrollView>
+			<BottomSheetModal
+				ref={bottomSheetModalRef}
+				index={0}
+				snapPoints={["28%"]}
+				handleIndicatorStyle={{ backgroundColor: theme.faded, width: 60 }}
+				backdropComponent={(props) => <Backdrop onPress={closeBottomsheet} {...props} />}
+			>
+				<ScrollView
+					style={{ flex: 1 }}
+					contentContainerStyle={{
+						paddingTop: 16,
+						paddingHorizontal: 20,
+						flexDirection: "row",
+						flexWrap: "wrap",
+						rowGap: 10,
+						columnGap: 20,
+						justifyContent: "center",
+					}}
+				>
+					{avatarList.map((item, index) => (
+						<TouchableOpacity
+							key={index}
+							activeOpacity={0.8}
+							style={{
+								width: 60,
+								height: 60,
+								borderRadius: 30,
+								borderWidth: 1,
+								borderColor: formValues.avatar === item ? theme.gold : "transparent",
+								backgroundColor: formValues.avatar === item ? theme.gold : "transparent",
+							}}
+							onPress={() => {
+								handleChange("avatar", item);
+								closeBottomsheet();
+							}}
+						>
+							<Image
+								source={{ uri: `https://api.dicebear.com/6.x/adventurer/png?seed=${item}` }}
+								style={{ width: "100%", height: "100%" }}
+							/>
+						</TouchableOpacity>
+					))}
+				</ScrollView>
+			</BottomSheetModal>
 		</>
 	);
 }
