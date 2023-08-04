@@ -14,4 +14,5 @@ export const showToast = (
 		position,
 		backgroundColor: variation === toastType.ERROR ? "red" : "green",
 		textColor: "#fff",
+		shadow: false,
 	});

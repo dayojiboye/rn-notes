@@ -5,14 +5,15 @@ import { Image } from "react-native";
 import NotesListScreen from "./NotesListScreen";
 import ProfileScreen from "./ProfileScreen";
 import themeConfig from "../config/theme";
-import useTheme from "../hooks/useTheme";
-import { useAuthentication } from "../hooks/useAuthentication";
+import useStore from "../hooks/useStore";
+import { avatarUrl } from "../constants";
 
 const Tab = createBottomTabNavigator();
 
 export default function Home() {
-	const theme = themeConfig(useTheme().theme);
-	const { user } = useAuthentication();
+	const appStore = useStore();
+	const theme = themeConfig(appStore.theme);
+	const user = appStore.user;
 
 	return (
 		<Tab.Navigator
@@ -38,7 +39,7 @@ export default function Home() {
 					tabBarIcon: (props) => (
 						<Image
 							source={{
-								uri: ``,
+								uri: user?.userAvatar || avatarUrl + "Tim",
 							}}
 							style={{
 								borderRadius: 18,

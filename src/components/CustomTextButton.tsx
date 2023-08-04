@@ -8,7 +8,7 @@ import {
 	TouchableOpacityProps,
 } from "react-native";
 import React from "react";
-import useTheme from "../hooks/useTheme";
+import useStore from "../hooks/useStore";
 import themeConfig from "../config/theme";
 
 type Props = {
@@ -35,7 +35,7 @@ export default function CustomTextButton({
 	iconProps,
 	...props
 }: Props) {
-	const theme = themeConfig(useTheme().theme);
+	const theme = themeConfig(useStore().theme);
 
 	const Icon = leftIcon ? leftIcon : rightIcon;
 

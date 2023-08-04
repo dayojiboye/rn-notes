@@ -3,7 +3,7 @@ import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
 import themeConfig from "../config/theme";
-import useTheme from "../hooks/useTheme";
+import useStore from "../hooks/useStore";
 import CustomTextInput from "../components/CustomTextInput";
 import CustomButton from "../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,9 +13,10 @@ import Backdrop from "../components/Backdrop";
 import { avatarList } from "../utils/mockData";
 import { mailFormat } from "../utils/helpers";
 import useSignUpMutation from "../hooks/useSignUp";
+import { avatarUrl } from "../constants";
 
 export default function SignUpScreen() {
-	const theme = themeConfig(useTheme().theme);
+	const theme = themeConfig(useStore().theme);
 	const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
 	const [formValues, setFormValues] = React.useState({
@@ -53,7 +54,6 @@ export default function SignUpScreen() {
 
 	const handleSubmit = () => {
 		if (isDisabled) return;
-		// console.log(formValues);
 		signupMutation.mutate({ email: formValues.email, password: formValues.password });
 	};
 
@@ -121,7 +121,7 @@ export default function SignUpScreen() {
 						{formValues.avatar ? (
 							<Image
 								source={{
-									uri: `https://api.dicebear.com/6.x/adventurer/png?seed=${formValues.avatar}`,
+									uri: `${avatarUrl}${formValues.avatar}`,
 								}}
 								style={{
 									width: 28,
@@ -192,7 +192,7 @@ export default function SignUpScreen() {
 							}}
 						>
 							<Image
-								source={{ uri: `https://api.dicebear.com/6.x/adventurer/png?seed=${item}` }}
+								source={{ uri: `${avatarUrl}${item}` }}
 								style={{ width: "100%", height: "100%" }}
 							/>
 						</TouchableOpacity>

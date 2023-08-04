@@ -1,7 +1,7 @@
 import { TextInput, TextInputProps, TouchableOpacity, View } from "react-native";
 import React from "react";
 import themeConfig from "../config/theme";
-import useTheme from "../hooks/useTheme";
+import useStore from "../hooks/useStore";
 import Icon from "react-native-vector-icons/Feather";
 
 type Props = {
@@ -16,7 +16,7 @@ export default function CustomTextInput({
 	isPassword = false,
 	...props
 }: Props) {
-	const theme = themeConfig(useTheme().theme);
+	const theme = themeConfig(useStore().theme);
 	const refInput = React.useRef<TextInput>(null);
 	const [secureText, setSecureText] = React.useState<boolean>(true);
 

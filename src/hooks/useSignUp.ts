@@ -4,9 +4,13 @@ import { showToast } from "../utils/helpers";
 import { toastType } from "../enums";
 import * as firestore from "firebase/firestore";
 import db from "../../firebase/firebaseConfig";
+import useStore from "./useStore";
+import { avatarUrl } from "../constants";
+import { UserData } from "../types";
 
 export default function useSignUpMutation(name: string, avatar: string) {
 	const auth = getAuth();
+	const appStore = useStore();
 
 	return useMutation<User, unknown, { email: string; password: string }>(
 		async (values) => {
@@ -15,18 +19,22 @@ export default function useSignUpMutation(name: string, avatar: string) {
 			const currentUser = response.user;
 			const timestamp = new Date();
 
+			const userData: UserData = {
+				displayName: name,
+				userAvatar: avatarUrl + avatar,
+				email: values.email,
+				uid: currentUser.uid,
+				createdDate: timestamp,
+			};
+
+			appStore.loginUser(userData);
+
 			try {
-				const docRef = await firestore.addDoc(firestore.collection(db, "users"), {
-					displayName: name,
-					userAvatar: avatar,
-					email: values.email,
-					uid: currentUser.uid,
-					createdDate: timestamp,
-				});
+				const docRef = await firestore.addDoc(firestore.collection(db, "users"), userData);
 				__DEV__ && console.log("Document written with ID: ", docRef.id);
-			} catch (e: any) {
-				__DEV__ && console.log("Error adding document: ", e);
-				showToast(`Error adding document: ${e}`, toastType.ERROR);
+			} catch (err: any) {
+				__DEV__ && console.log("Error adding document: ", err.message);
+				showToast(err.message, toastType.ERROR);
 			}
 
 			return currentUser;
@@ -35,8 +43,8 @@ export default function useSignUpMutation(name: string, avatar: string) {
 			onSuccess: (data) => {
 				// Do anything
 			},
-			onError: (error: any) => {
-				showToast(error, toastType.ERROR);
+			onError: (err: any) => {
+				showToast(err.message, toastType.ERROR);
 			},
 		}
 	);

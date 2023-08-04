@@ -1,10 +1,10 @@
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Text } from "react-native";
 import React from "react";
-import useTheme from "../hooks/useTheme";
+import useStore from "../hooks/useStore";
 import themeConfig from "../config/theme";
 
 export default function CustomProgressIndicator() {
-	const theme = themeConfig(useTheme().theme);
+	const theme = themeConfig(useStore().theme);
 
 	return (
 		<View
@@ -26,7 +26,7 @@ export default function CustomProgressIndicator() {
 					height: 80,
 					alignItems: "center",
 					justifyContent: "center",
-					borderRadius: 10,
+					borderRadius: 4,
 				}}
 			>
 				<ActivityIndicator />

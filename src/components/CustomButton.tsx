@@ -9,7 +9,7 @@ import {
 	ActivityIndicator,
 } from "react-native";
 import React from "react";
-import useTheme from "../hooks/useTheme";
+import useStore from "../hooks/useStore";
 import themeConfig from "../config/theme";
 
 type Props = {
@@ -38,7 +38,7 @@ export default function CustomButton({
 	isLoading,
 	...props
 }: Props) {
-	const theme = themeConfig(useTheme().theme);
+	const theme = themeConfig(useStore().theme);
 
 	const Icon = leftIcon ? leftIcon : rightIcon;
 
