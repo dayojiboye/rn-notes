@@ -20,7 +20,12 @@ export default function Home() {
 			screenOptions={{
 				headerShown: false,
 				tabBarShowLabel: false,
-				// tabBarStyle: { paddingBottom: 32, paddingTop: 10 },
+				tabBarStyle: {
+					shadowColor: "rgba(0, 0, 0, 0.3)",
+					shadowOpacity: 1,
+					shadowRadius: 3,
+					shadowOffset: { width: 1, height: 1 },
+				},
 			}}
 		>
 			<Tab.Screen

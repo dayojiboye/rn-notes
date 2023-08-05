@@ -7,7 +7,7 @@ export const showToast = (
 	message: string,
 	variation?: toastType,
 	duration: number = Toast.durations.LONG,
-	position: number = 50
+	position: number = 60
 ) =>
 	Toast.show(message, {
 		duration,

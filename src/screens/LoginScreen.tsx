@@ -48,6 +48,7 @@ export default function LoginScreen({ navigation }: Props) {
 					alignItems: "center",
 					flex: 1,
 					justifyContent: "center",
+					backgroundColor: theme.primary,
 				}}
 				keyboardShouldPersistTaps="handled"
 			>
@@ -56,7 +57,7 @@ export default function LoginScreen({ navigation }: Props) {
 						fontSize: 32,
 						textAlign: "center",
 						fontFamily: "sfBold",
-						color: theme.primary,
+						color: theme.secondary,
 					}}
 				>
 					Sign In
@@ -66,7 +67,7 @@ export default function LoginScreen({ navigation }: Props) {
 						textAlign: "center",
 						fontSize: 16,
 						marginTop: 7,
-						color: theme.primary,
+						color: theme.secondary,
 						fontFamily: "sf",
 					}}
 				>
@@ -88,11 +89,11 @@ export default function LoginScreen({ navigation }: Props) {
 						disabled={isDisabled}
 						isLoading={signin.isLoading}
 						rightIcon={Icon}
-						iconProps={{ color: theme.secondary, size: 16, name: "arrow-right" }}
+						iconProps={{ color: theme.primary, size: 16, name: "arrow-right" }}
 						onPress={handleSubmit}
 					/>
 					<View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-						<Text style={{ fontSize: 15, color: theme.primary, fontFamily: "sfMedium" }}>
+						<Text style={{ fontSize: 15, color: theme.secondary, fontFamily: "sfMedium" }}>
 							Don't have an account?
 						</Text>
 						<CustomTextButton

@@ -78,7 +78,7 @@ export default function SignUpScreen({ navigation }: Props) {
 						fontSize: 32,
 						textAlign: "center",
 						fontFamily: "sfBold",
-						color: theme.primary,
+						color: theme.secondary,
 					}}
 				>
 					Sign Up
@@ -88,7 +88,7 @@ export default function SignUpScreen({ navigation }: Props) {
 						textAlign: "center",
 						fontSize: 16,
 						marginTop: 7,
-						color: theme.primary,
+						color: theme.secondary,
 						fontFamily: "sf",
 					}}
 				>
@@ -138,7 +138,7 @@ export default function SignUpScreen({ navigation }: Props) {
 								}}
 							/>
 						) : (
-							<Text style={{ fontSize: 16, fontFamily: "sf", color: theme.primary }}>
+							<Text style={{ fontSize: 16, fontFamily: "sf", color: theme.secondary }}>
 								Select an avatar
 							</Text>
 						)}
@@ -148,11 +148,11 @@ export default function SignUpScreen({ navigation }: Props) {
 						isLoading={signupMutation.isLoading}
 						disabled={isDisabled}
 						rightIcon={Icon}
-						iconProps={{ color: theme.secondary, size: 16, name: "arrow-right" }}
+						iconProps={{ color: theme.primary, size: 16, name: "arrow-right" }}
 						onPress={handleSubmit}
 					/>
 					<View style={{ flexDirection: "row", alignItems: "center", gap: 3 }}>
-						<Text style={{ fontSize: 15, color: theme.primary, fontFamily: "sfMedium" }}>
+						<Text style={{ fontSize: 15, color: theme.secondary, fontFamily: "sfMedium" }}>
 							Already have an account?
 						</Text>
 						<CustomTextButton
@@ -166,7 +166,7 @@ export default function SignUpScreen({ navigation }: Props) {
 			<BottomSheetModal
 				ref={bottomSheetModalRef}
 				index={0}
-				snapPoints={["28%"]}
+				snapPoints={["28%", "40%"]}
 				handleIndicatorStyle={{ backgroundColor: theme.faded, width: 60 }}
 				backdropComponent={(props) => <Backdrop onPress={closeBottomsheet} {...props} />}
 			>

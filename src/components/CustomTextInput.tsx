@@ -38,7 +38,7 @@ export default function CustomTextInput({
 				spellCheck={false}
 				style={{
 					fontSize: 16,
-					color: theme.primary,
+					color: theme.secondary,
 					fontFamily: "sf",
 					paddingHorizontal: 12,
 					paddingVertical: 16,

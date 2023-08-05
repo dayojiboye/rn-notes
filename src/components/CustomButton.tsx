@@ -63,12 +63,12 @@ export default function CustomButton({
 			{...props}
 		>
 			{isLoading ? (
-				<ActivityIndicator size="small" color={theme.secondary} />
+				<ActivityIndicator size="small" color={theme.primary} />
 			) : (
 				<>
 					{leftIcon && <Icon {...iconProps} />}
 					<Text
-						style={[{ fontSize: 16, color: theme.secondary, fontFamily: "sfMedium" }, labelStyle]}
+						style={[{ fontSize: 16, color: theme.primary, fontFamily: "sfMedium" }, labelStyle]}
 					>
 						{label}
 					</Text>

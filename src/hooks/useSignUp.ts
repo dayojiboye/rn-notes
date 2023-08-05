@@ -7,6 +7,7 @@ import db from "../../firebase/firebaseConfig";
 import useStore from "./useStore";
 import { avatarUrl } from "../constants";
 import { UserData } from "../types";
+import { format as formatDate } from "date-fns";
 
 export default function useSignUpMutation(name: string, avatar: string) {
 	const auth = getAuth();
@@ -17,7 +18,7 @@ export default function useSignUpMutation(name: string, avatar: string) {
 			const response = await createUserWithEmailAndPassword(auth, values.email, values.password);
 
 			const currentUser = response.user;
-			const timestamp = new Date();
+			const timestamp = formatDate(new Date(), "MMMM YYY");
 
 			const userData: UserData = {
 				displayName: name,
