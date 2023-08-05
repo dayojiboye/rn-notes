@@ -14,8 +14,12 @@ import { avatarList } from "../utils/mockData";
 import { mailFormat } from "../utils/helpers";
 import useSignUpMutation from "../hooks/useSignUp";
 import { avatarUrl } from "../constants";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types";
 
-export default function SignUpScreen() {
+type Props = NativeStackScreenProps<RootStackParamList, "Signup">;
+
+export default function SignUpScreen({ navigation }: Props) {
 	const theme = themeConfig(useStore().theme);
 	const bottomSheetModalRef = React.useRef<BottomSheetModal>(null);
 
@@ -151,7 +155,11 @@ export default function SignUpScreen() {
 						<Text style={{ fontSize: 15, color: theme.primary, fontFamily: "sfMedium" }}>
 							Already have an account?
 						</Text>
-						<CustomTextButton label="Log in" labelStyle={{ fontSize: 15 }} />
+						<CustomTextButton
+							label="Log in"
+							labelStyle={{ fontSize: 15 }}
+							onPress={() => navigation.push("Login")}
+						/>
 					</View>
 				</View>
 			</KeyboardAwareScrollView>

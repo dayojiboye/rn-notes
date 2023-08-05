@@ -1,10 +1,12 @@
-export type UserData = {
-	displayName: string;
-	userAvatar: string;
-	email: string | null;
-	uid: string;
-	createdDate: Date;
-};
+export type UserData =
+	| {
+			displayName: string;
+			userAvatar: string;
+			email: string | null;
+			uid: string;
+			createdDate: Date;
+	  }
+	| undefined;
 
 export type AppContextValue = {
 	theme: string;

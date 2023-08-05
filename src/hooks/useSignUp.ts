@@ -1,4 +1,4 @@
-import { User, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useMutation } from "react-query";
 import { showToast } from "../utils/helpers";
 import { toastType } from "../enums";
@@ -30,10 +30,9 @@ export default function useSignUpMutation(name: string, avatar: string) {
 			appStore.loginUser(userData);
 
 			try {
-				const docRef = await firestore.addDoc(firestore.collection(db, "users"), userData);
-				__DEV__ && console.log("Document written with ID: ", docRef.id);
+				await firestore.setDoc(firestore.doc(db, "users", currentUser.uid), userData);
 			} catch (err: any) {
-				__DEV__ && console.log("Error adding document: ", err.message);
+				__DEV__ && console.log("Error creating document: ", err.message);
 				showToast(err.message, toastType.ERROR);
 			}
 

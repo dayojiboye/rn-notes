@@ -7,7 +7,7 @@ export const showToast = (
 	message: string,
 	variation?: toastType,
 	duration: number = Toast.durations.LONG,
-	position: number = Toast.positions.BOTTOM
+	position: number = 50
 ) =>
 	Toast.show(message, {
 		duration,
@@ -15,4 +15,5 @@ export const showToast = (
 		backgroundColor: variation === toastType.ERROR ? "red" : "green",
 		textColor: "#fff",
 		shadow: false,
+		animation: true,
 	});
