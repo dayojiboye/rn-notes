@@ -40,10 +40,16 @@ type AppContextAction =
 	| { type: "logout_user" }
 	| { type: "init_app"; payload: boolean };
 
-const initialState: { theme: string; user: UserData | null; isInitialized: boolean } = {
+const initialState: {
+	theme: string;
+	user: UserData | null;
+	isInitializing: boolean;
+	isAuth: boolean;
+} = {
 	theme: "LIGHT",
 	user: null,
-	isInitialized: false,
+	isInitializing: true,
+	isAuth: false,
 };
 
 export const AppContext = React.createContext({} as AppContextValue);
@@ -60,18 +66,20 @@ const reducer = (state: typeof initialState, action: AppContextAction) => {
 			return {
 				...state,
 				user: action.payload,
+				isAuth: true,
 			};
 
 		case "logout_user":
 			return {
 				...state,
 				user: null,
+				isAuth: false,
 			};
 
 		case "init_app":
 			return {
 				...state,
-				isInitialized: action.payload,
+				isInitializing: action.payload,
 			};
 
 		default:
@@ -105,13 +113,14 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 		return {
 			theme: state.theme,
 			user: state.user,
-			isInitialized: state.isInitialized,
+			isInitializing: state.isInitializing,
+			isAuth: state.isAuth,
 			toggleTheme,
 			loginUser,
 			logoutUser,
 			setInitApp,
 		};
-	}, [state.theme, state.user, state.isInitialized]);
+	}, [state.theme, state.user, state.isInitializing, state.isAuth]);
 
 	return <AppContext.Provider value={value} {...props} />;
 }

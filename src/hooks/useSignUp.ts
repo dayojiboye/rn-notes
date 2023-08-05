@@ -1,14 +1,16 @@
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { User, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useMutation } from "react-query";
 import { showToast } from "../utils/helpers";
 import { toastType } from "../enums";
+import * as firestore from "firebase/firestore";
+import db from "../../firebase/firebaseConfig";
+import useStore from "./useStore";
 import { avatarUrl } from "../constants";
 import { UserData } from "../types";
-import useCreateUserData from "./useCreateUserData";
 
 export default function useSignUpMutation(name: string, avatar: string) {
 	const auth = getAuth();
-	const saveUserData = useCreateUserData();
+	const appStore = useStore();
 
 	return useMutation<UserData, unknown, { email: string; password: string }>(
 		async (values) => {
@@ -25,11 +27,21 @@ export default function useSignUpMutation(name: string, avatar: string) {
 				createdDate: timestamp,
 			};
 
+			appStore.loginUser(userData);
+
+			try {
+				const docRef = await firestore.addDoc(firestore.collection(db, "users"), userData);
+				__DEV__ && console.log("Document written with ID: ", docRef.id);
+			} catch (err: any) {
+				__DEV__ && console.log("Error adding document: ", err.message);
+				showToast(err.message, toastType.ERROR);
+			}
+
 			return userData;
 		},
 		{
 			onSuccess: (data) => {
-				saveUserData.mutate(data);
+				// Do anything
 			},
 			onError: (err: any) => {
 				showToast(err.message, toastType.ERROR);

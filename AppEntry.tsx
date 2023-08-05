@@ -9,11 +9,13 @@ import * as SplashScreen from "expo-splash-screen";
 import useStore from "./src/hooks/useStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
+import useAuthentication from "./src/hooks/useAuthentication";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function AppEntry() {
 	const appStore = useStore();
+	const user = useAuthentication();
 
 	const _getUserPreferredTheme = async () => {
 		try {
@@ -37,6 +39,13 @@ export default function AppEntry() {
 		}
 	};
 
+	React.useEffect(() => {
+		// App is ready..
+		setTimeout(() => {
+			appStore.setInitApp(false);
+		}, 200);
+	}, [user]);
+
 	const [fontsLoaded] = useFonts({
 		sfLight: require("./assets/fonts/SF-Pro-Display-Light.otf"),
 		sf: require("./assets/fonts/SF-Pro-Display-Regular.otf"),
@@ -53,7 +62,8 @@ export default function AppEntry() {
 		}
 	}, [fontsLoaded]);
 
-	if (!fontsLoaded) {
+	if (!fontsLoaded || appStore.isInitializing) {
+		// App is still loading
 		return null;
 	}
 

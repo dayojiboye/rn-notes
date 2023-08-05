@@ -7,15 +7,8 @@ export default function useAuthentication() {
 	const auth = getAuth();
 	const appStore = useStore();
 
-	const setInit = () => {
-		setTimeout(() => {
-			appStore.setInitApp(true);
-		}, 500);
-	};
-
 	React.useEffect(() => {
 		const unsubscribeFromAuthStatusChanged = onAuthStateChanged(auth, (user) => {
-			setInit();
 			if (user) {
 				// User is signed in
 				setUser(user);

@@ -9,7 +9,8 @@ export type UserData = {
 export type AppContextValue = {
 	theme: string;
 	user: UserData | null;
-	isInitialized: boolean;
+	isInitializing: boolean;
+	isAuth: boolean;
 	toggleTheme: (value: string) => void;
 	loginUser: (user: UserData) => void;
 	logoutUser: () => void;
