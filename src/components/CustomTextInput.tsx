@@ -57,7 +57,7 @@ export default function CustomTextInput({
 						setSecureText(!secureText);
 					}}
 				>
-					<Icon name={secureText ? "eye-off" : "eye"} size={18} color={theme.placeholder} />
+					<Icon name={secureText ? "eye-off" : "eye"} size={24} color={theme.placeholder} />
 				</TouchableOpacity>
 			)}
 		</View>

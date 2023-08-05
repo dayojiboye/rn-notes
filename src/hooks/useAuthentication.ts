@@ -22,6 +22,7 @@ export default function useAuthentication() {
 			} else {
 				// User is signed out
 				setUser(undefined);
+				appStore.logoutUser();
 			}
 		});
 

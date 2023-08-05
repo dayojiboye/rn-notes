@@ -1,7 +1,7 @@
 export type UserData = {
 	displayName: string;
 	userAvatar: string;
-	email: string;
+	email: string | null;
 	uid: string;
 	createdDate: Date;
 };

@@ -39,7 +39,7 @@ export default function Home() {
 					tabBarIcon: (props) => (
 						<Image
 							source={{
-								uri: user?.userAvatar || avatarUrl + "Tim",
+								uri: user?.userAvatar || "https://api.dicebear.com/6.x/bottts/png?seed=Mittens",
 							}}
 							style={{
 								borderRadius: 18,

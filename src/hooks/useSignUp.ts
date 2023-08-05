@@ -1,18 +1,16 @@
-import { User, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useMutation } from "react-query";
 import { showToast } from "../utils/helpers";
 import { toastType } from "../enums";
-import * as firestore from "firebase/firestore";
-import db from "../../firebase/firebaseConfig";
-import useStore from "./useStore";
 import { avatarUrl } from "../constants";
 import { UserData } from "../types";
+import useCreateUserData from "./useCreateUserData";
 
 export default function useSignUpMutation(name: string, avatar: string) {
 	const auth = getAuth();
-	const appStore = useStore();
+	const saveUserData = useCreateUserData();
 
-	return useMutation<User, unknown, { email: string; password: string }>(
+	return useMutation<UserData, unknown, { email: string; password: string }>(
 		async (values) => {
 			const response = await createUserWithEmailAndPassword(auth, values.email, values.password);
 
@@ -27,21 +25,11 @@ export default function useSignUpMutation(name: string, avatar: string) {
 				createdDate: timestamp,
 			};
 
-			appStore.loginUser(userData);
-
-			try {
-				const docRef = await firestore.addDoc(firestore.collection(db, "users"), userData);
-				__DEV__ && console.log("Document written with ID: ", docRef.id);
-			} catch (err: any) {
-				__DEV__ && console.log("Error adding document: ", err.message);
-				showToast(err.message, toastType.ERROR);
-			}
-
-			return currentUser;
+			return userData;
 		},
 		{
 			onSuccess: (data) => {
-				// Do anything
+				saveUserData.mutate(data);
 			},
 			onError: (err: any) => {
 				showToast(err.message, toastType.ERROR);
