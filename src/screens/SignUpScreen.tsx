@@ -11,7 +11,6 @@ import CustomTextButton from "../components/CustomTextButton";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { mailFormat } from "../utils/helpers";
 import useSignUpMutation from "../hooks/useSignUp";
-import { avatarUrl } from "../constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AvatarsBottomSheet from "../components/BottomSheets/AvatarsBottomSheet";
@@ -120,9 +119,7 @@ export default function SignUpScreen({ navigation }: Props) {
 					>
 						{formValues.avatar ? (
 							<Image
-								source={{
-									uri: `${avatarUrl}${formValues.avatar}`,
-								}}
+								source={{ uri: formValues.avatar }}
 								style={{
 									width: 28,
 									height: 28,

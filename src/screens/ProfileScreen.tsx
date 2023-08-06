@@ -8,7 +8,8 @@ import Icon from "react-native-vector-icons/AntDesign";
 import OctIcon from "react-native-vector-icons/Octicons";
 import EditProfileBottomSheet from "../components/BottomSheets/EditProfileBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { profileItemsEnum } from "../enums";
+import AvatarsBottomSheet from "../components/BottomSheets/AvatarsBottomSheet";
+import useUpdateAvatarMutation from "../hooks/useUpdateAvatar";
 
 export default function ProfileScreen() {
 	const insets = useSafeAreaInsets();
@@ -16,12 +17,14 @@ export default function ProfileScreen() {
 	const appStore = useStore();
 	const theme = themeConfig(appStore.theme);
 	const editProfileBottomSheetRef = React.useRef<BottomSheetModal>(null);
-	const [itemType, setItemType] = React.useState<profileItemsEnum>();
+	const avatarsBottomSheetRef = React.useRef<BottomSheetModal>(null);
+	const [currentAvatar, setCurrentAvatar] = React.useState<string | undefined>(
+		appStore.user?.userAvatar
+	);
 
-	const openBottomSheet = (type: profileItemsEnum) => {
-		setItemType(type);
-		editProfileBottomSheetRef.current?.present();
-	};
+	const updateAvatarMutation = useUpdateAvatarMutation(() =>
+		avatarsBottomSheetRef.current?.close()
+	);
 
 	return (
 		<>
@@ -38,7 +41,11 @@ export default function ProfileScreen() {
 						backgroundColor: "#F4EBD0",
 					}}
 				>
-					<TouchableOpacity activeOpacity={0.8} style={{ position: "relative" }}>
+					<TouchableOpacity
+						activeOpacity={0.8}
+						style={{ position: "relative" }}
+						onPress={() => avatarsBottomSheetRef.current?.present()}
+					>
 						<Image
 							source={{ uri: appStore.user?.userAvatar }}
 							style={{
@@ -81,7 +88,7 @@ export default function ProfileScreen() {
 					<ProfileItem
 						title="Display name"
 						value={appStore.user?.displayName}
-						onPress={() => openBottomSheet(profileItemsEnum.DISPLAY_NAME)}
+						onPress={() => editProfileBottomSheetRef.current?.present()}
 					/>
 					<ProfileItem title="Email address" value={appStore.user?.email} isVerified />
 					<ProfileItem title="Joined" value={appStore.user?.createdDate} />
@@ -98,14 +105,23 @@ export default function ProfileScreen() {
 					}}
 					onPress={() => signout.mutate()}
 				>
-					<Text style={{ color: theme.red, fontFamily: "sfMedium", fontSize: 18 }}>Log Out</Text>
+					<Text style={{ color: theme.red, fontFamily: "sfMedium", fontSize: 18 }}>
+						{signout.isLoading ? "Logging Out..." : "Log Out"}
+					</Text>
 					{signout.isLoading && <ActivityIndicator color={theme.red} />}
 				</TouchableOpacity>
 			</ScrollView>
-			<EditProfileBottomSheet
-				ref={editProfileBottomSheetRef}
-				itemType={itemType}
-				onClose={() => setItemType(undefined)}
+			<EditProfileBottomSheet ref={editProfileBottomSheetRef} />
+			<AvatarsBottomSheet
+				ref={avatarsBottomSheetRef}
+				isUpdate
+				selectedAvatar={currentAvatar ?? ""}
+				isLoading={updateAvatarMutation.isLoading}
+				handleChange={(_, value) => setCurrentAvatar(value)}
+				onUpdate={() => {
+					if (!currentAvatar || currentAvatar === appStore.user?.userAvatar) return;
+					updateAvatarMutation.mutate({ avatar: currentAvatar });
+				}}
 			/>
 		</>
 	);

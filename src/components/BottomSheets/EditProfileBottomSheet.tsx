@@ -4,24 +4,16 @@ import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/typ
 import themeConfig from "../../config/theme";
 import useStore from "../../hooks/useStore";
 import AppBottomSheet from ".";
-import { profileItemsEnum } from "../../enums";
 import CustomTextInput from "../CustomTextInput";
 import CustomButton from "../CustomButton";
 import useUpdateNameMutation from "../../hooks/useUpdateName";
-import { mailFormat } from "../../utils/helpers";
-
-type Props = {
-	itemType: profileItemsEnum | undefined;
-	onClose: () => void;
-};
 
 const EditProfileBottomSheet = React.forwardRef(
-	({ itemType, onClose }: Props, ref: React.Ref<BottomSheetModalMethods>) => {
+	(props, ref: React.Ref<BottomSheetModalMethods>) => {
 		const appStore = useStore();
 		const defaultSnapPoints = ["28%"];
 		const theme = themeConfig(appStore.theme);
 		const [displayName, setDisplayName] = React.useState<string>("");
-		const [email, setEmail] = React.useState<string>("");
 		const [snapPoints, setSnapPoints] = React.useState(defaultSnapPoints);
 
 		const closeBottomsheet = React.useCallback(() => {
@@ -60,36 +52,6 @@ const EditProfileBottomSheet = React.forwardRef(
 			};
 		}, []);
 
-		const renderBasedOnType = () => {
-			switch (itemType) {
-				case profileItemsEnum.DISPLAY_NAME:
-					return (
-						<>
-							<CustomTextInput
-								defaultValue={appStore.user?.displayName}
-								onChangeText={(value: string) => setDisplayName(value)}
-							/>
-							<CustomButton
-								label="Update"
-								isLoading={updateDisplayName.isLoading}
-								disabled={
-									!displayName.trim() ||
-									displayName.trim().toLowerCase() === appStore.user?.displayName.toLowerCase()
-								}
-								onPress={() => updateDisplayName.mutate({ displayName })}
-							/>
-						</>
-					);
-
-				// ** //
-
-				// ** //
-
-				default:
-					return null;
-			}
-		};
-
 		return (
 			<AppBottomSheet
 				ref={ref}
@@ -109,7 +71,20 @@ const EditProfileBottomSheet = React.forwardRef(
 					}}
 					keyboardShouldPersistTaps="handled"
 				>
-					{renderBasedOnType()}
+					<CustomTextInput
+						autoFocus
+						defaultValue={appStore.user?.displayName}
+						onChangeText={(value: string) => setDisplayName(value)}
+					/>
+					<CustomButton
+						label="Update"
+						isLoading={updateDisplayName.isLoading}
+						disabled={
+							!displayName.trim() ||
+							displayName.trim().toLowerCase() === appStore.user?.displayName.toLowerCase()
+						}
+						onPress={() => updateDisplayName.mutate({ displayName })}
+					/>
 				</ScrollView>
 			</AppBottomSheet>
 		);

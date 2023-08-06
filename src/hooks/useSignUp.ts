@@ -5,7 +5,6 @@ import { toastType } from "../enums";
 import * as firestore from "firebase/firestore";
 import db from "../../firebase/firebaseConfig";
 import useStore from "./useStore";
-import { avatarUrl } from "../constants";
 import { UserData } from "../types";
 import { format as formatDate } from "date-fns";
 
@@ -22,7 +21,7 @@ export default function useSignUpMutation(name: string, avatar: string) {
 
 			const userData: UserData = {
 				displayName: name,
-				userAvatar: avatarUrl + avatar,
+				userAvatar: avatar,
 				email: values.email,
 				uid: currentUser.uid,
 				createdDate: timestamp,
