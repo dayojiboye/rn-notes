@@ -83,12 +83,7 @@ export default function ProfileScreen() {
 						value={appStore.user?.displayName}
 						onPress={() => openBottomSheet(profileItemsEnum.DISPLAY_NAME)}
 					/>
-					<ProfileItem
-						title="Email address"
-						value={appStore.user?.email}
-						isVerified
-						onPress={() => openBottomSheet(profileItemsEnum.EMAIL)}
-					/>
+					<ProfileItem title="Email address" value={appStore.user?.email} isVerified />
 					<ProfileItem title="Joined" value={appStore.user?.createdDate} />
 				</View>
 				<TouchableOpacity
@@ -133,7 +128,7 @@ const ProfileItem = ({
 
 	return (
 		<TouchableOpacity
-			activeOpacity={isJoined ? 1 : 0.7}
+			activeOpacity={isJoined || isVerified ? 1 : 0.7}
 			style={{
 				backgroundColor: "#f5f5f5",
 				padding: 20,

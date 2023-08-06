@@ -1,4 +1,4 @@
-import { ScrollView, Keyboard, TouchableOpacity, Image, Text } from "react-native";
+import { ScrollView, Keyboard } from "react-native";
 import React from "react";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import themeConfig from "../../config/theme";
@@ -8,6 +8,7 @@ import { profileItemsEnum } from "../../enums";
 import CustomTextInput from "../CustomTextInput";
 import CustomButton from "../CustomButton";
 import useUpdateNameMutation from "../../hooks/useUpdateName";
+import { mailFormat } from "../../utils/helpers";
 
 type Props = {
 	itemType: profileItemsEnum | undefined;
@@ -69,16 +70,20 @@ const EditProfileBottomSheet = React.forwardRef(
 								onChangeText={(value: string) => setDisplayName(value)}
 							/>
 							<CustomButton
-								label="Submit"
+								label="Update"
 								isLoading={updateDisplayName.isLoading}
-								disabled={!displayName || displayName === appStore.user?.displayName}
+								disabled={
+									!displayName.trim() ||
+									displayName.trim().toLowerCase() === appStore.user?.displayName.toLowerCase()
+								}
 								onPress={() => updateDisplayName.mutate({ displayName })}
 							/>
 						</>
 					);
 
-				case profileItemsEnum.EMAIL:
-					return <Text>Email</Text>;
+				// ** //
+
+				// ** //
 
 				default:
 					return null;
@@ -100,7 +105,6 @@ const EditProfileBottomSheet = React.forwardRef(
 						flexDirection: "row",
 						flexWrap: "wrap",
 						rowGap: 10,
-						columnGap: 20,
 						justifyContent: "center",
 					}}
 					keyboardShouldPersistTaps="handled"

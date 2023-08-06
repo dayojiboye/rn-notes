@@ -6,8 +6,8 @@ export const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 export const showToast = (
 	message: string,
 	variation?: toastType,
-	duration: number = Toast.durations.LONG,
-	position: number = 60
+	position: number = 60,
+	duration: number = Toast.durations.LONG
 ) =>
 	Toast.show(message, {
 		duration,

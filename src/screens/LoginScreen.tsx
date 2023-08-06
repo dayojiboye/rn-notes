@@ -26,7 +26,9 @@ export default function LoginScreen({ navigation }: Props) {
 	});
 
 	const isDisabled: boolean =
-		!formValues.email.trim() || !formValues.email.trim().match(mailFormat) || !formValues.password;
+		!formValues.email.trim() ||
+		!formValues.email.trim().match(mailFormat) ||
+		!formValues.password.trim();
 
 	const handleChange = (name: string, value: string) => {
 		setFormValues({

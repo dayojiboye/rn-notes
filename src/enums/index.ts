@@ -11,5 +11,4 @@ export enum toastType {
 export enum profileItemsEnum {
 	AVATAR = "AVATAR",
 	DISPLAY_NAME = "DISPLAY_NAME",
-	EMAIL = "EMAIL",
 }

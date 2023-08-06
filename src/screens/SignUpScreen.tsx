@@ -33,7 +33,7 @@ export default function SignUpScreen({ navigation }: Props) {
 		!formValues.name.trim() ||
 		!formValues.email.trim() ||
 		!formValues.email.trim().match(mailFormat) ||
-		!formValues.password ||
+		!formValues.password.trim() ||
 		!formValues.avatar;
 
 	const signupMutation = useSignUpMutation(formValues.name, formValues.avatar);
