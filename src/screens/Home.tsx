@@ -6,7 +6,6 @@ import NotesListScreen from "./NotesListScreen";
 import ProfileScreen from "./ProfileScreen";
 import themeConfig from "../config/theme";
 import useStore from "../hooks/useStore";
-import { avatarUrl } from "../constants";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,11 +20,13 @@ export default function Home() {
 				headerShown: false,
 				tabBarShowLabel: false,
 				tabBarStyle: {
+					elevation: 1,
 					shadowColor: "rgba(0, 0, 0, 0.3)",
 					shadowOpacity: 1,
-					shadowRadius: 3,
-					shadowOffset: { width: 1, height: 1 },
+					shadowRadius: 6,
+					shadowOffset: { width: 1, height: 2 },
 				},
+				// tabBarHideOnKeyboard: true
 			}}
 		>
 			<Tab.Screen

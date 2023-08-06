@@ -12,6 +12,7 @@ import CustomTextButton from "../components/CustomTextButton";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import useSignInMutation from "../hooks/useSignIn";
+import { Dimensions } from "react-native";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -39,14 +40,17 @@ export default function LoginScreen({ navigation }: Props) {
 		signin.mutate({ email: formValues.email, password: formValues.password });
 	};
 
+	const { height } = Dimensions.get("window");
+
 	return (
 		<>
 			<StatusBar style="dark" />
 			<KeyboardAwareScrollView
+				style={{ backgroundColor: "#fff" }}
 				contentContainerStyle={{
 					paddingHorizontal: 20,
 					alignItems: "center",
-					flex: 1,
+					height,
 					justifyContent: "center",
 					backgroundColor: theme.primary,
 				}}

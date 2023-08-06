@@ -38,7 +38,8 @@ type AppContextAction =
 	| { type: "toggle_theme"; payload: string }
 	| { type: "login_user"; payload: UserData }
 	| { type: "logout_user" }
-	| { type: "init_app"; payload: boolean };
+	| { type: "init_app"; payload: boolean }
+	| { type: "update_user"; payload: UserData };
 
 const initialState: {
 	theme: string;
@@ -82,6 +83,12 @@ const reducer = (state: typeof initialState, action: AppContextAction) => {
 				isInitializing: action.payload,
 			};
 
+		case "update_user":
+			return {
+				...state,
+				user: action.payload,
+			};
+
 		default:
 			throw new Error("Unsupported action type for app context");
 	}
@@ -110,6 +117,11 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 			dispatch({ type: "init_app", payload: value });
 		};
 
+		const updateUserDetails = (user: UserData) => {
+			dispatch({ type: "update_user", payload: user });
+			_storeUserData(user);
+		};
+
 		return {
 			theme: state.theme,
 			user: state.user,
@@ -119,6 +131,7 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 			loginUser,
 			logoutUser,
 			setInitApp,
+			updateUserDetails,
 		};
 	}, [state.theme, state.user, state.isInitializing, state.isAuth]);
 

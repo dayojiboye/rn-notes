@@ -36,15 +36,19 @@ export default function AppEntry() {
 			}
 		} catch (err) {
 			__DEV__ && console.log("Something went wrong loading user data", err);
+		} finally {
+			setTimeout(() => {
+				appStore.setInitApp(false);
+			}, 500);
 		}
 	};
 
-	React.useEffect(() => {
-		// App is ready..
-		setTimeout(() => {
-			appStore.setInitApp(false);
-		}, 200);
-	}, [user]);
+	// React.useEffect(() => {
+	// 	// App is ready..
+	// 	setTimeout(() => {
+	// 		appStore.setInitApp(false);
+	// 	}, 500);
+	// }, [user]);
 
 	const [fontsLoaded] = useFonts({
 		sfLight: require("./assets/fonts/SF-Pro-Display-Light.otf"),
@@ -54,10 +58,13 @@ export default function AppEntry() {
 		sfBold: require("./assets/fonts/SF-Pro-Display-Bold.otf"),
 	});
 
+	React.useEffect(() => {
+		_getUserData();
+	}, []);
+
 	const onLayoutRootView = React.useCallback(async () => {
 		if (fontsLoaded) {
 			_getUserPreferredTheme();
-			_getUserData();
 			await SplashScreen.hideAsync();
 		}
 	}, [fontsLoaded]);

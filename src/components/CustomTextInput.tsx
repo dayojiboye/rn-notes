@@ -29,6 +29,7 @@ export default function CustomTextInput({
 				borderRadius: 4,
 				flexDirection: "row",
 				alignItems: "center",
+				width: "100%",
 			}}
 		>
 			<TextInput

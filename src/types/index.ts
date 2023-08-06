@@ -17,6 +17,7 @@ export type AppContextValue = {
 	loginUser: (user: UserData) => void;
 	logoutUser: () => void;
 	setInitApp: (value: boolean) => void;
+	updateUserDetails: (user: UserData) => void;
 };
 
 // export type RootStackParamList = {

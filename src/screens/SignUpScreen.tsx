@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Keyboard, ScrollView, Image } from "react-native";
+import { View, Text, TouchableOpacity, Keyboard, Image, Dimensions } from "react-native";
 import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { StatusBar } from "expo-status-bar";
@@ -9,13 +9,12 @@ import CustomButton from "../components/CustomButton";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomTextButton from "../components/CustomTextButton";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import Backdrop from "../components/Backdrop";
-import { avatarList } from "../utils/mockData";
 import { mailFormat } from "../utils/helpers";
 import useSignUpMutation from "../hooks/useSignUp";
 import { avatarUrl } from "../constants";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
+import AvatarsBottomSheet from "../components/BottomSheets/AvatarsBottomSheet";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Signup">;
 
@@ -44,11 +43,6 @@ export default function SignUpScreen({ navigation }: Props) {
 		bottomSheetModalRef.current?.present();
 	}, []);
 
-	const closeBottomsheet = React.useCallback(() => {
-		Keyboard.dismiss();
-		bottomSheetModalRef.current?.close();
-	}, []);
-
 	const handleChange = (name: string, value: string) => {
 		setFormValues({
 			...formValues,
@@ -61,15 +55,18 @@ export default function SignUpScreen({ navigation }: Props) {
 		signupMutation.mutate({ email: formValues.email, password: formValues.password });
 	};
 
+	const { height } = Dimensions.get("window");
+
 	return (
 		<>
 			<StatusBar style="dark" />
 			<KeyboardAwareScrollView
+				style={{ backgroundColor: "#fff" }}
 				contentContainerStyle={{
 					paddingHorizontal: 20,
 					alignItems: "center",
-					flex: 1,
 					justifyContent: "center",
+					height,
 				}}
 				keyboardShouldPersistTaps="handled"
 			>
@@ -118,7 +115,6 @@ export default function SignUpScreen({ navigation }: Props) {
 							paddingHorizontal: 12,
 							paddingVertical: 16,
 							justifyContent: "center",
-							maxHeight: 50,
 						}}
 						onPress={openBottomsheet}
 					>
@@ -163,50 +159,11 @@ export default function SignUpScreen({ navigation }: Props) {
 					</View>
 				</View>
 			</KeyboardAwareScrollView>
-			<BottomSheetModal
+			<AvatarsBottomSheet
 				ref={bottomSheetModalRef}
-				index={0}
-				snapPoints={["28%", "40%"]}
-				handleIndicatorStyle={{ backgroundColor: theme.faded, width: 60 }}
-				backdropComponent={(props) => <Backdrop onPress={closeBottomsheet} {...props} />}
-			>
-				<ScrollView
-					style={{ flex: 1 }}
-					contentContainerStyle={{
-						paddingTop: 16,
-						paddingHorizontal: 20,
-						flexDirection: "row",
-						flexWrap: "wrap",
-						rowGap: 10,
-						columnGap: 20,
-						justifyContent: "center",
-					}}
-				>
-					{avatarList.map((item, index) => (
-						<TouchableOpacity
-							key={index}
-							activeOpacity={0.8}
-							style={{
-								width: 60,
-								height: 60,
-								borderRadius: 30,
-								borderWidth: 1,
-								borderColor: formValues.avatar === item ? theme.gold : "transparent",
-								backgroundColor: formValues.avatar === item ? theme.gold : "transparent",
-							}}
-							onPress={() => {
-								handleChange("avatar", item);
-								closeBottomsheet();
-							}}
-						>
-							<Image
-								source={{ uri: `${avatarUrl}${item}` }}
-								style={{ width: "100%", height: "100%" }}
-							/>
-						</TouchableOpacity>
-					))}
-				</ScrollView>
-			</BottomSheetModal>
+				selectedAvatar={formValues.avatar}
+				handleChange={(name, value) => handleChange(name, value)}
+			/>
 		</>
 	);
 }
