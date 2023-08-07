@@ -63,7 +63,6 @@ export default function SignUpScreen({ navigation }: Props) {
 				style={{ backgroundColor: "#fff" }}
 				contentContainerStyle={{
 					paddingHorizontal: 20,
-					alignItems: "center",
 					justifyContent: "center",
 					height,
 				}}
@@ -72,7 +71,6 @@ export default function SignUpScreen({ navigation }: Props) {
 				<Text
 					style={{
 						fontSize: 32,
-						textAlign: "center",
 						fontFamily: "sfBold",
 						color: theme.secondary,
 					}}
@@ -81,16 +79,15 @@ export default function SignUpScreen({ navigation }: Props) {
 				</Text>
 				<Text
 					style={{
-						textAlign: "center",
 						fontSize: 16,
 						marginTop: 7,
 						color: theme.secondary,
 						fontFamily: "sf",
 					}}
 				>
-					Fill in your details to register
+					Create an account to get started
 				</Text>
-				<View style={{ marginTop: 32, width: "100%", gap: 16 }}>
+				<View style={{ marginTop: 60, width: "100%", gap: 16 }}>
 					<CustomTextInput
 						placeholder="Enter Your Name"
 						onChangeText={(value: string) => handleChange("name", value)}
@@ -111,9 +108,10 @@ export default function SignUpScreen({ navigation }: Props) {
 							borderWidth: 1,
 							borderRadius: 4,
 							borderColor: theme.faded,
-							paddingHorizontal: 12,
+							paddingHorizontal: 20,
 							paddingVertical: 16,
 							justifyContent: "center",
+							height: 50,
 						}}
 						onPress={openBottomsheet}
 					>
@@ -131,7 +129,7 @@ export default function SignUpScreen({ navigation }: Props) {
 								}}
 							/>
 						) : (
-							<Text style={{ fontSize: 16, fontFamily: "sf", color: theme.secondary }}>
+							<Text style={{ fontSize: 14, fontFamily: "sf", color: theme.secondary }}>
 								Select an avatar
 							</Text>
 						)}

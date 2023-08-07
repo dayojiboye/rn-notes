@@ -30,6 +30,7 @@ export default function CustomTextInput({
 				flexDirection: "row",
 				alignItems: "center",
 				width: "100%",
+				height: 50,
 			}}
 		>
 			<TextInput
@@ -38,12 +39,12 @@ export default function CustomTextInput({
 				placeholderTextColor={theme.placeholder}
 				spellCheck={false}
 				style={{
-					fontSize: 16,
+					fontSize: 14,
 					color: theme.secondary,
 					fontFamily: "sf",
-					paddingHorizontal: 12,
-					paddingVertical: 16,
 					flex: 1,
+					height: "100%",
+					paddingHorizontal: 20,
 				}}
 				onChangeText={onChangeText}
 				secureTextEntry={isPassword ? secureText : false}
@@ -52,13 +53,18 @@ export default function CustomTextInput({
 			{isPassword && (
 				<TouchableOpacity
 					activeOpacity={0.8}
-					style={{ marginRight: 12, marginLeft: 10 }}
+					style={{
+						height: "100%",
+						justifyContent: "center",
+						alignItems: "center",
+						width: 50,
+					}}
 					onPress={() => {
 						refInput?.current?.focus();
 						setSecureText(!secureText);
 					}}
 				>
-					<Icon name={secureText ? "eye-off" : "eye"} size={22} color={theme.placeholder} />
+					<Icon name={secureText ? "eye-off" : "eye"} size={20} color={theme.placeholder} />
 				</TouchableOpacity>
 			)}
 		</View>

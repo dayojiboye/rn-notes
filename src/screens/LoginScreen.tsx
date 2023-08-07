@@ -51,7 +51,6 @@ export default function LoginScreen({ navigation }: Props) {
 				style={{ backgroundColor: "#fff" }}
 				contentContainerStyle={{
 					paddingHorizontal: 20,
-					alignItems: "center",
 					height,
 					justifyContent: "center",
 					backgroundColor: theme.primary,
@@ -61,7 +60,6 @@ export default function LoginScreen({ navigation }: Props) {
 				<Text
 					style={{
 						fontSize: 32,
-						textAlign: "center",
 						fontFamily: "sfBold",
 						color: theme.secondary,
 					}}
@@ -70,7 +68,6 @@ export default function LoginScreen({ navigation }: Props) {
 				</Text>
 				<Text
 					style={{
-						textAlign: "center",
 						fontSize: 16,
 						marginTop: 7,
 						color: theme.secondary,
@@ -79,7 +76,7 @@ export default function LoginScreen({ navigation }: Props) {
 				>
 					Log in with your credentials
 				</Text>
-				<View style={{ marginTop: 32, width: "100%", gap: 16 }}>
+				<View style={{ marginTop: 60, width: "100%", gap: 16 }}>
 					<CustomTextInput
 						placeholder="Enter Your E-mail"
 						onChangeText={(value: string) => handleChange("email", value)}
