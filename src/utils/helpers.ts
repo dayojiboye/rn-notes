@@ -14,6 +14,7 @@ export const showToast = (
 		position,
 		backgroundColor: variation === toastType.ERROR ? "red" : "green",
 		textColor: "#fff",
+		textStyle: { fontSize: 16 },
 		shadow: false,
 		animation: true,
 	});

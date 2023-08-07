@@ -10,29 +10,37 @@ const _storeUserPreferredTheme = async (value: string) => {
 	}
 };
 
-const _storeUserData = async (value: UserData) => {
-	try {
-		await AsyncStorage.setItem("userData", JSON.stringify(value));
-	} catch (err) {
-		__DEV__ && console.log("Something went wrong saving user data", err);
-	}
-};
-
-const _removeUserData = async () => {
-	try {
-		await AsyncStorage.removeItem("userData");
-	} catch (err) {
-		__DEV__ && console.log("Something went wrong removing user data", err);
-	}
-};
-
-// const _removeUserId = async () => {
+// const _storeUserData = async (value: UserData) => {
 // 	try {
-// 		await AsyncStorage.removeItem("userId");
+// 		await AsyncStorage.setItem("userData", JSON.stringify(value));
 // 	} catch (err) {
-// 		__DEV__ && console.log("Something went wrong removing user ID", err);
+// 		__DEV__ && console.log("Something went wrong saving user data", err);
 // 	}
 // };
+
+// const _removeUserData = async () => {
+// 	try {
+// 		await AsyncStorage.removeItem("userData");
+// 	} catch (err) {
+// 		__DEV__ && console.log("Something went wrong removing user data", err);
+// 	}
+// };
+
+const _storeUserId = async (value: string) => {
+	try {
+		await AsyncStorage.setItem("userId", value);
+	} catch (err) {
+		__DEV__ && console.log("Something went wrong saving user ID", err);
+	}
+};
+
+const _removeUserId = async () => {
+	try {
+		await AsyncStorage.removeItem("userId");
+	} catch (err) {
+		__DEV__ && console.log("Something went wrong removing user ID", err);
+	}
+};
 
 type AppContextAction =
 	| { type: "toggle_theme"; payload: string }
@@ -105,12 +113,12 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 
 		const loginUser = (user: UserData) => {
 			dispatch({ type: "login_user", payload: user });
-			_storeUserData(user);
+			if (user?.uid) _storeUserId(user?.uid);
 		};
 
 		const logoutUser = () => {
 			dispatch({ type: "logout_user" });
-			_removeUserData();
+			_removeUserId();
 		};
 
 		const setInitApp = (value: boolean) => {
@@ -119,7 +127,7 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 
 		const updateUserDetails = (user: UserData) => {
 			dispatch({ type: "update_user", payload: user });
-			_storeUserData(user);
+			if (user?.uid) _storeUserId(user?.uid);
 		};
 
 		return {

@@ -10,6 +10,12 @@ import useStore from "./src/hooks/useStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import useAuthentication from "./src/hooks/useAuthentication";
+import * as firestore from "firebase/firestore";
+import { useMutation } from "react-query";
+import { UserData } from "./src/types";
+import { showToast } from "./src/utils/helpers";
+import { toastType } from "./src/enums";
+import db from "./firebase/firebaseConfig";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,27 +34,54 @@ export default function AppEntry() {
 		}
 	};
 
-	const _getUserData = async () => {
-		try {
-			const value = await AsyncStorage.getItem("userData");
-			if (value !== null) {
-				appStore.loginUser(JSON.parse(value));
-			}
-		} catch (err) {
-			__DEV__ && console.log("Something went wrong loading user data", err);
-		} finally {
-			setTimeout(() => {
-				appStore.setInitApp(false);
-			}, 500);
-		}
-	};
+	// const _getUserData = async () => {
+	// 	try {
+	// 		const value = await AsyncStorage.getItem("userData");
+	// 		if (value !== null) {
+	// 			appStore.loginUser(JSON.parse(value));
+	// 		}
+	// 	} catch (err) {
+	// 		__DEV__ && console.log("Something went wrong loading user data", err);
+	// 	} finally {
+	// 		setTimeout(() => {
+	// 			appStore.setInitApp(false);
+	// 		}, 500);
+	// 	}
+	// };
 
-	// React.useEffect(() => {
-	// 	// App is ready..
-	// 	setTimeout(() => {
-	// 		appStore.setInitApp(false);
-	// 	}, 500);
-	// }, [user]);
+	const _fetchUserData = useMutation<
+		firestore.DocumentSnapshot<firestore.DocumentData, firestore.DocumentData> | undefined
+	>(
+		async (values) => {
+			const userId = await AsyncStorage.getItem("userId");
+			if (!userId) {
+				// showToast("Please re-login", toastType.ERROR);
+				return;
+			}
+			const docRef = firestore.doc(db, "users", userId);
+			const docSnap = await firestore.getDoc(docRef);
+			return docSnap;
+		},
+		{
+			onSuccess: (data) => {
+				if (data?.exists()) {
+					const userData: UserData = JSON.parse(JSON.stringify(data.data()));
+					appStore.loginUser(userData);
+				} else {
+					__DEV__ && console.log("No user found!");
+				}
+			},
+			onError: (err: any) => {
+				__DEV__ && console.log("Error fecthing user data: ", err.message);
+				showToast(err.message, toastType.ERROR);
+			},
+			onSettled: () => {
+				setTimeout(() => {
+					appStore.setInitApp(false);
+				}, 500);
+			},
+		}
+	);
 
 	const [fontsLoaded] = useFonts({
 		sfLight: require("./assets/fonts/SF-Pro-Display-Light.otf"),
@@ -59,7 +92,8 @@ export default function AppEntry() {
 	});
 
 	React.useEffect(() => {
-		_getUserData();
+		// _getUserData();
+		_fetchUserData.mutate();
 	}, []);
 
 	const onLayoutRootView = React.useCallback(async () => {
