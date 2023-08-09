@@ -1,4 +1,12 @@
-import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	Image,
+	Platform,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useSignOutMutation from "../hooks/useSignOut";
@@ -152,6 +160,11 @@ const ProfileItem = ({
 				flexDirection: "row",
 				alignItems: "center",
 				gap: 12,
+				shadowColor: Platform.OS === "ios" ? "rgba(0, 0, 0, 0.1)" : "rgba(0, 0, 0, 0.5)",
+				elevation: 2,
+				shadowOpacity: 1,
+				shadowRadius: 1,
+				shadowOffset: { width: 0.5, height: 0.5 },
 			}}
 			onPress={() => onPress?.()}
 		>

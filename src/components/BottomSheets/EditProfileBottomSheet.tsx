@@ -66,7 +66,7 @@ const EditProfileBottomSheet = React.forwardRef(
 						paddingHorizontal: 20,
 						flexDirection: "row",
 						flexWrap: "wrap",
-						rowGap: 10,
+						rowGap: 20,
 						justifyContent: "center",
 					}}
 					keyboardShouldPersistTaps="handled"

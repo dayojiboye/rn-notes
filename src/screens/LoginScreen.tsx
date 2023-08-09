@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }: Props) {
 						color: theme.secondary,
 					}}
 				>
-					Sign In
+					Welcome Back!
 				</Text>
 				<Text
 					style={{
@@ -74,7 +74,7 @@ export default function LoginScreen({ navigation }: Props) {
 						fontFamily: "sf",
 					}}
 				>
-					Log in with your credentials
+					Sign in with your credentials
 				</Text>
 				<View style={{ marginTop: 60, width: "100%", gap: 16 }}>
 					<CustomTextInput
