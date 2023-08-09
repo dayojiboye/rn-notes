@@ -6,15 +6,17 @@ import themeConfig from "../config/theme";
 import useStore from "../hooks/useStore";
 import { Keyboard, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
+import NoteModal from "../components/NoteModal";
 
 export default function NotesListScreen() {
 	const appTheme = themeConfig(useStore().theme);
+	const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 
 	return (
 		<>
 			<CustomAppBar
 				trailIcon={MIcon}
-				trailIconProps={{ name: "more-vert", size: 32, color: appTheme.gold }}
+				trailIconProps={{ name: "more-vert", size: 36, color: appTheme.gold }}
 			/>
 			<View style={{ backgroundColor: "red", flex: 1, position: "relative" }}>
 				<TouchableOpacity
@@ -63,10 +65,12 @@ export default function NotesListScreen() {
 						shadowRadius: 10.32,
 						elevation: 16,
 					}}
+					onPress={() => setIsModalVisible(true)}
 				>
 					<MIcon name="add" size={36} color="#fff" />
 				</TouchableOpacity>
 			</View>
+			<NoteModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
 		</>
 	);
 }
