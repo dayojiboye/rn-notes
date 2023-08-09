@@ -76,10 +76,13 @@ export default function ProfileScreen() {
 								alignItems: "center",
 								justifyContent: "center",
 								shadowColor: theme.black,
-								elevation: 1,
-								shadowOpacity: 1,
-								shadowRadius: 1,
-								shadowOffset: { width: 0, height: 0.5 },
+								shadowOffset: {
+									width: 0,
+									height: 3,
+								},
+								shadowOpacity: 0.27,
+								shadowRadius: 4.65,
+								elevation: 6,
 								zIndex: 2,
 							}}
 						>
