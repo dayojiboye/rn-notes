@@ -25,7 +25,7 @@ export default function CustomAppBar({
 	return (
 		<View
 			style={{
-				paddingHorizontal: 32,
+				paddingHorizontal: 20,
 				paddingTop: insets.top + 20,
 				paddingBottom: 16,
 				flexDirection: "row",

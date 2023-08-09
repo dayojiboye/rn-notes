@@ -18,6 +18,8 @@ type Props = {
 	isPassword?: boolean;
 	containerStyle?: StyleProp<ViewStyle>;
 	inputStyle?: StyleProp<TextStyle>;
+	icon?: any;
+	iconProps?: any;
 } & TextInputProps;
 
 export default function CustomTextInput({
@@ -26,11 +28,15 @@ export default function CustomTextInput({
 	isPassword = false,
 	containerStyle,
 	inputStyle,
+	icon,
+	iconProps,
 	...props
 }: Props) {
 	const theme = themeConfig(useStore().theme);
 	const refInput = React.useRef<TextInput>(null);
 	const [secureText, setSecureText] = React.useState<boolean>(true);
+
+	const Icon = icon;
 
 	return (
 		<View
@@ -48,6 +54,7 @@ export default function CustomTextInput({
 				containerStyle,
 			]}
 		>
+			{icon && <Icon {...iconProps} />}
 			<TextInput
 				ref={refInput}
 				placeholder={placeholder}
