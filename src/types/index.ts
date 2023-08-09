@@ -32,3 +32,10 @@ export type RootStackParamList = {
 	Login: undefined;
 	Signup: undefined;
 };
+
+export type Note = {
+	text: string;
+	createdDate: string | Date;
+	isPinned: boolean;
+	// might add more later
+};
