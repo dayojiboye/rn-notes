@@ -60,7 +60,7 @@ export default function CustomTextInput({
 						width: 50,
 					}}
 					onPress={() => {
-						refInput?.current?.focus();
+						// refInput?.current?.focus();
 						setSecureText(!secureText);
 					}}
 				>

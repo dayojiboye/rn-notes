@@ -173,7 +173,9 @@ const ProfileItem = ({
 				<Text style={{ color: theme.disabled, fontFamily: "sf", fontSize: 14 }}>{value}</Text>
 			</View>
 			{isVerified && <OctIcon name="verified" color={theme.green} size={22} />}
-			<Icon name={isJoined ? "calendar" : "edit"} size={24} color="#4f4f4f" />
+			{!isVerified ? (
+				<Icon name={isJoined ? "calendar" : "edit"} size={24} color="#4f4f4f" />
+			) : null}
 		</TouchableOpacity>
 	);
 };
