@@ -39,6 +39,7 @@ export type Note = {
 	content: string;
 	createdDate: string | Date;
 	isPinned: boolean;
-	uid: string | undefined;
+	userId: string | undefined;
+	documentId?: string;
 	// might add more later
 };

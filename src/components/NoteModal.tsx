@@ -40,13 +40,13 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	const scrollRef = React.useRef<ScrollView>(null);
 	const [isPinned, setIsPinned] = React.useState<boolean>(false);
 
-	const addNoteMutation = useCreateNoteMutation(appStore.user?.uid ?? "");
+	const createNote = useCreateNoteMutation(() => setNote(""));
 
 	const newNote: Note = {
 		content: note,
 		createdDate: formatDate(new Date(), "MMMM YYY"),
 		isPinned,
-		uid: appStore.user?.uid,
+		userId: appStore.user?.uid,
 	};
 
 	// Editor config starts
@@ -90,14 +90,14 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	// }, []);
 
 	// const handleBlur = React.useCallback(() => {
-	// 	addNoteMutation.mutate(newNote);
+	// 	createNote.mutate(newNote);
 	// }, []);
 
 	// Editor config ends
 
 	// React.useEffect(() => {
 	// 	console.log(note);
-	// }, [note]);
+	// });
 
 	// React.useEffect(() => {
 	// 	console.log(appStore.notes);
@@ -106,13 +106,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	return (
 		<>
 			<StatusBar style="auto" />
-			<Modal
-				visible={isVisible}
-				animationType="slide"
-				onRequestClose={() => {
-					onClose?.();
-				}}
-			>
+			<Modal visible={isVisible} animationType="slide">
 				<View
 					style={{
 						flex: 1,
@@ -136,8 +130,9 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={() => {
-								addNoteMutation.mutate(newNote);
 								onClose?.();
+								if (!note) return;
+								createNote.mutate(newNote);
 							}}
 							style={{
 								marginLeft: "auto",
@@ -173,8 +168,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 							// Don't focus on android at all! It's having a weird behaviour
 							// To-Do: save note on editor blur and on closing modal
 							initialFocus={Platform.OS === "android" ? false : true}
-							// initialContentHTML={`<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
-							// 	 `}
+							initialContentHTML={note}
 							ref={richText}
 							placeholder="Start writing..."
 							onChange={(text) => setNote(text)}
