@@ -43,3 +43,8 @@ export type Note = {
 	documentId?: string;
 	// might add more later
 };
+
+export type NotesData = {
+	title: string;
+	data: Note[] | undefined;
+}[];

@@ -111,26 +111,26 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 					style={{
 						flex: 1,
 						paddingTop: insets.top + 20,
-						// paddingHorizontal: 20,
 						backgroundColor: theme.primary,
 					}}
 				>
 					{/* CTA */}
 					<View
-						style={{ flexDirection: "row", alignItems: "center", gap: 28, paddingHorizontal: 20 }}
+						style={{ flexDirection: "row", alignItems: "center", gap: 20, paddingHorizontal: 20 }}
 					>
 						<TouchableOpacity
-							style={{ width: 40, height: 40 }}
+							style={{ width: 30, height: 30 }}
 							onPress={() => setIsPinned(!isPinned)}
 						>
-							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={35} color={theme.gold} />
+							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={25} color={theme.gold} />
 						</TouchableOpacity>
-						<TouchableOpacity style={{ width: 40, height: 40 }}>
-							<FAIcon name="trash-alt" size={30} color={theme.red} />
+						<TouchableOpacity style={{ width: 30, height: 30 }}>
+							<FAIcon name="trash-alt" size={20} color={theme.red} />
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={() => {
 								onClose?.();
+								setIsPinned(false);
 								if (!note) return;
 								createNote.mutate(newNote);
 							}}
@@ -166,11 +166,10 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 						<RichEditor
 							// To-Do: should only focus if it's a new note, on editing an existing note it shouldn't focus
 							// Don't focus on android at all! It's having a weird behaviour
-							// To-Do: save note on editor blur and on closing modal
 							initialFocus={Platform.OS === "android" ? false : true}
 							initialContentHTML={note}
 							ref={richText}
-							placeholder="Start writing..."
+							placeholder="Start typing..."
 							onChange={(text) => setNote(text)}
 							editorInitializedCallback={editorInitializedCallback}
 							containerStyle={{ flex: 1 }}
