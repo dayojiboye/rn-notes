@@ -36,7 +36,7 @@ export default function CustomTextInput({
 	const refInput = React.useRef<TextInput>(null);
 	const [secureText, setSecureText] = React.useState<boolean>(true);
 
-	const Icon = icon;
+	const LeftIcon = icon;
 
 	return (
 		<View
@@ -54,7 +54,7 @@ export default function CustomTextInput({
 				containerStyle,
 			]}
 		>
-			{icon && <Icon {...iconProps} />}
+			{icon && <LeftIcon {...iconProps} />}
 			<TextInput
 				ref={refInput}
 				placeholder={placeholder}
