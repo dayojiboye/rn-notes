@@ -11,6 +11,7 @@ import NoteModal from "../components/NoteModal";
 export default function NotesListScreen() {
 	const appTheme = themeConfig(useStore().theme);
 	const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+	const [showFloatingButton, setShowFloatingButton] = React.useState<boolean>(true);
 
 	return (
 		<>
@@ -44,33 +45,44 @@ export default function NotesListScreen() {
 					style={{ backgroundColor: appTheme.primary }}
 					contentContainerStyle={{ flex: 1 }}
 				></ScrollView>
-				<TouchableOpacity
-					activeOpacity={0.7}
-					style={{
-						position: "absolute",
-						bottom: 72,
-						right: 20,
-						backgroundColor: appTheme.gold,
-						width: 68,
-						height: 68,
-						borderRadius: 34,
-						alignItems: "center",
-						justifyContent: "center",
-						shadowColor: appTheme.black,
-						shadowOffset: {
-							width: 0,
-							height: 8,
-						},
-						shadowOpacity: 0.44,
-						shadowRadius: 10.32,
-						elevation: 16,
-					}}
-					onPress={() => setIsModalVisible(true)}
-				>
-					<MIcon name="add" size={36} color="#fff" />
-				</TouchableOpacity>
+				{showFloatingButton ? (
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={{
+							position: "absolute",
+							bottom: 72,
+							right: 20,
+							backgroundColor: appTheme.gold,
+							width: 68,
+							height: 68,
+							borderRadius: 34,
+							alignItems: "center",
+							justifyContent: "center",
+							shadowColor: appTheme.black,
+							shadowOffset: {
+								width: 0,
+								height: 8,
+							},
+							shadowOpacity: 0.44,
+							shadowRadius: 10.32,
+							elevation: 16,
+						}}
+						onPress={() => {
+							setShowFloatingButton(false);
+							setIsModalVisible(true);
+						}}
+					>
+						<MIcon name="add" size={36} color="#fff" />
+					</TouchableOpacity>
+				) : null}
 			</View>
-			<NoteModal isVisible={isModalVisible} onClose={() => setIsModalVisible(false)} />
+			<NoteModal
+				isVisible={isModalVisible}
+				onClose={() => {
+					setShowFloatingButton(true);
+					setIsModalVisible(false);
+				}}
+			/>
 		</>
 	);
 }

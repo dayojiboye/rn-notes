@@ -48,7 +48,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 
 	const handleCursorPosition = React.useCallback((scrollY: number) => {
 		// Positioning scroll bar
-		scrollRef.current!.scrollTo({ y: scrollY - 30, animated: true });
+		scrollRef.current?.scrollTo({ y: scrollY - 30, animated: true });
 	}, []);
 
 	// const handleFontSize = React.useCallback(() => {
@@ -74,6 +74,10 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	//   console.log('onMessage', type, id, data);
 	// }, []);
 
+	// React.useEffect(() => {
+	// 	console.log(note);
+	// }, [note]);
+
 	return (
 		<>
 			<StatusBar style="auto" />
@@ -97,7 +101,8 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 						style={{ flexDirection: "row", alignItems: "center", gap: 32, paddingHorizontal: 20 }}
 					>
 						<TouchableOpacity>
-							<AntIcon name="pushpin" size={30} color={theme.gold} />
+							{/* pushpin */}
+							<AntIcon name="pushpino" size={35} color={theme.gold} />
 						</TouchableOpacity>
 						<TouchableOpacity>
 							<FAIcon name="trash-alt" size={30} color={theme.red} />
@@ -127,20 +132,29 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 					</View>
 					{/* Rich Editor */}
 					<ScrollView
-						contentContainerStyle={{ flex: 1, paddingTop: 32 }}
+						ref={scrollRef}
+						contentContainerStyle={{ paddingTop: 32 }}
 						nestedScrollEnabled={true}
 						scrollEventThrottle={20}
 						keyboardDismissMode="none"
 					>
 						<RichEditor
-							initialFocus={true}
+							// To-Do: should only focus if it's a new note, on editing an existing note it shouldn't focus
+							// Don't focus on android at all! It's having a weird behaviour
+							// To-Do: save note on editor blur and on closing modal
+							initialFocus={Platform.OS === "android" ? false : true}
+							initialContentHTML={`<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+								 `}
 							ref={richText}
 							placeholder="Start writing..."
 							onChange={(text) => setNote(text)}
 							editorInitializedCallback={editorInitializedCallback}
-							containerStyle={{ flex: 1, paddingHorizontal: 20 }}
-							editorStyle={{ backgroundColor: "#fff" }}
-							style={{ minHeight: 300, flex: 1 }}
+							containerStyle={{ flex: 1 }}
+							editorStyle={{
+								backgroundColor: "#fff",
+								contentCSSText: `font-size: 16px; line-height: 24px; caret-color: ${theme.gold}`,
+							}}
+							style={{ minHeight: 300, flex: 1, paddingHorizontal: 20 }}
 							useContainer={true}
 							initialHeight={400}
 							// enterKeyHint="done"
@@ -162,28 +176,33 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 							// onInsertLink={onInsertLink}
 							iconSize={24}
 							iconGap={24}
-							// actions={[
-							// 	actions.undo,
-							// 	actions.redo,
-							// 	actions.insertVideo,
-							// 	actions.insertImage,
-							// 	actions.setStrikethrough,
-							// 	// actions.checkboxList,
-							// 	actions.insertOrderedList,
-							// 	actions.blockquote,
-							// 	actions.alignLeft,
-							// 	actions.alignCenter,
-							// 	actions.alignRight,
-							// 	actions.code,
-							// 	actions.line,
-							// 	actions.foreColor,
-							// 	actions.hiliteColor,
-							// 	actions.heading1,
-							// 	actions.heading4,
-							// 	// "insertEmoji",
-							// 	// "insertHTML",
-							// 	// "fontSize",
-							// ]} // default defaultActions
+							actions={[
+								actions.keyboard,
+								actions.setBold,
+								actions.setItalic,
+								actions.setUnderline,
+								actions.undo,
+								actions.redo,
+								actions.insertOrderedList,
+								// actions.insertVideo,
+								// actions.insertImage,
+								actions.setStrikethrough,
+								actions.insertLink,
+								// actions.checkboxList,
+								// actions.blockquote,
+								// actions.alignLeft,
+								// actions.alignCenter,
+								// actions.alignRight,
+								// actions.code,
+								// actions.line,
+								// actions.foreColor,
+								// actions.hiliteColor,
+								// actions.heading1,
+								// actions.heading4,
+								// "insertEmoji",
+								// "insertHTML",
+								// "fontSize",
+							]} // default defaultActions
 							// iconMap={{
 							//   insertEmoji: phizIcon,
 							//   [actions.foreColor]: () => <Text style={[styles.tib, {color: 'blue'}]}>FC</Text>,
