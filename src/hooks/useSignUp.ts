@@ -31,8 +31,9 @@ export default function useSignUpMutation(name: string, avatar: string) {
 
 			try {
 				await firestore.setDoc(firestore.doc(db, "users", currentUser.uid), userData);
+				await firestore.setDoc(firestore.doc(db, "notes", currentUser.uid), {});
 			} catch (err: any) {
-				__DEV__ && console.log("Error creating document: ", err.message);
+				__DEV__ && console.log("Error creating document(s): ", err.message);
 				showToast(err.message, toastType.ERROR);
 			}
 

@@ -22,6 +22,9 @@ import {
 	RichToolbar,
 } from "react-native-pell-rich-editor";
 import { StatusBar } from "expo-status-bar";
+import useCreateNoteMutation from "../hooks/useCreateNote";
+import { format as formatDate } from "date-fns";
+import { Note } from "../types";
 
 type Props = {
 	isVisible: boolean;
@@ -30,11 +33,23 @@ type Props = {
 
 export default function NoteModal({ isVisible, onClose }: Props) {
 	const insets = useSafeAreaInsets();
-	const theme = themeConfig(useStore().theme);
+	const appStore = useStore();
+	const theme = themeConfig(appStore.theme);
 	const richText = React.useRef<RichEditor>(null);
 	const [note, setNote] = React.useState<string>("");
 	const scrollRef = React.useRef<ScrollView>(null);
+	const [isPinned, setIsPinned] = React.useState<boolean>(false);
 
+	const addNoteMutation = useCreateNoteMutation(appStore.user?.uid ?? "");
+
+	const newNote: Note = {
+		content: note,
+		createdDate: formatDate(new Date(), "MMMM YYY"),
+		isPinned,
+		uid: appStore.user?.uid,
+	};
+
+	// Editor config starts
 	const editorInitializedCallback = () => {
 		richText.current?.registerToolbar(function (items) {
 			// items contain all the actions that are currently active
@@ -74,9 +89,19 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	//   console.log('onMessage', type, id, data);
 	// }, []);
 
+	// const handleBlur = React.useCallback(() => {
+	// 	addNoteMutation.mutate(newNote);
+	// }, []);
+
+	// Editor config ends
+
 	// React.useEffect(() => {
 	// 	console.log(note);
 	// }, [note]);
+
+	// React.useEffect(() => {
+	// 	console.log(appStore.notes);
+	// }, [appStore.notes]);
 
 	return (
 		<>
@@ -98,17 +123,22 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 				>
 					{/* CTA */}
 					<View
-						style={{ flexDirection: "row", alignItems: "center", gap: 32, paddingHorizontal: 20 }}
+						style={{ flexDirection: "row", alignItems: "center", gap: 28, paddingHorizontal: 20 }}
 					>
-						<TouchableOpacity>
-							{/* pushpin */}
-							<AntIcon name="pushpino" size={35} color={theme.gold} />
+						<TouchableOpacity
+							style={{ width: 40, height: 40 }}
+							onPress={() => setIsPinned(!isPinned)}
+						>
+							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={35} color={theme.gold} />
 						</TouchableOpacity>
-						<TouchableOpacity>
+						<TouchableOpacity style={{ width: 40, height: 40 }}>
 							<FAIcon name="trash-alt" size={30} color={theme.red} />
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => onClose?.()}
+							onPress={() => {
+								addNoteMutation.mutate(newNote);
+								onClose?.();
+							}}
 							style={{
 								marginLeft: "auto",
 								backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -143,8 +173,8 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 							// Don't focus on android at all! It's having a weird behaviour
 							// To-Do: save note on editor blur and on closing modal
 							initialFocus={Platform.OS === "android" ? false : true}
-							initialContentHTML={`<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
-								 `}
+							// initialContentHTML={`<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus</p>
+							// 	 `}
 							ref={richText}
 							placeholder="Start writing..."
 							onChange={(text) => setNote(text)}
@@ -161,6 +191,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 							pasteAsPlainText={true}
 							autoCapitalize="on"
 							onCursorPosition={handleCursorPosition}
+							// onBlur={handleBlur}
 						/>
 					</ScrollView>
 					<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
