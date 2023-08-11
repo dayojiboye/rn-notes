@@ -26,6 +26,7 @@
 		"react-native": "0.72.3",
 		"react-native-dotenv": "^3.4.9",
 		"react-native-gesture-handler": "~2.12.0",
+		"react-native-get-random-values": "~1.9.0",
 		"react-native-keyboard-aware-scroll-view": "^0.9.5",
 		"react-native-pell-rich-editor": "^1.9.0",
 		"react-native-reanimated": "~3.3.0",
@@ -38,13 +39,15 @@
 		"react-native-vector-icons": "^10.0.0",
 		"react-native-webview": "13.2.2",
 		"react-query": "^3.39.3",
-		"typescript": "^5.1.6"
+		"typescript": "^5.1.6",
+		"uuid": "^9.0.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.0",
 		"@babel/plugin-proposal-export-namespace-from": "^7.18.9",
 		"@types/react-native": "^0.72.2",
 		"@types/react-native-vector-icons": "^6.4.13",
+		"@types/uuid": "^9.0.2",
 		"babel-preset-expo": "^9.5.1",
 		"react-native-svg-transformer": "^1.1.0"
 	},

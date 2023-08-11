@@ -13,13 +13,11 @@ export type AppContextValue = {
 	user: UserData | null;
 	isInitializing: boolean;
 	isAuth: boolean;
-	notes: Note[];
 	toggleTheme: (value: string) => void;
 	loginUser: (user: UserData) => void;
 	logoutUser: () => void;
 	setInitApp: (value: boolean) => void;
 	updateUserDetails: (user: UserData) => void;
-	addNote: (note: Note) => void;
 };
 
 // export type RootStackParamList = {
@@ -40,7 +38,7 @@ export type Note = {
 	createdDate: string | Date;
 	isPinned: boolean;
 	userId: string | undefined;
-	documentId?: string;
+	documentId: string;
 	// might add more later
 };
 

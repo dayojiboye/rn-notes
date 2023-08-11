@@ -47,21 +47,18 @@ type AppContextAction =
 	| { type: "login_user"; payload: UserData }
 	| { type: "logout_user" }
 	| { type: "init_app"; payload: boolean }
-	| { type: "update_user"; payload: UserData }
-	| { type: "add_note"; payload: Note };
+	| { type: "update_user"; payload: UserData };
 
 const initialState: {
 	theme: string;
 	user: UserData | null;
 	isInitializing: boolean;
 	isAuth: boolean;
-	notes: Note[];
 } = {
 	theme: "LIGHT",
 	user: null,
 	isInitializing: true,
 	isAuth: false,
-	notes: [],
 };
 
 export const AppContext = React.createContext({} as AppContextValue);
@@ -86,7 +83,6 @@ const reducer = (state: typeof initialState, action: AppContextAction) => {
 				...state,
 				user: null,
 				isAuth: false,
-				notes: [],
 			};
 
 		case "init_app":
@@ -99,12 +95,6 @@ const reducer = (state: typeof initialState, action: AppContextAction) => {
 			return {
 				...state,
 				user: action.payload,
-			};
-
-		case "add_note":
-			return {
-				...state,
-				notes: [action.payload, ...state.notes],
 			};
 
 		default:
@@ -140,24 +130,18 @@ export default function AppProvider(props: React.PropsWithChildren<{}>) {
 			if (user?.uid) _storeUserId(user?.uid);
 		};
 
-		const addNote = (note: Note) => {
-			dispatch({ type: "add_note", payload: note });
-		};
-
 		return {
 			theme: state.theme,
 			user: state.user,
 			isInitializing: state.isInitializing,
 			isAuth: state.isAuth,
-			notes: state.notes,
 			toggleTheme,
 			loginUser,
 			logoutUser,
 			setInitApp,
 			updateUserDetails,
-			addNote,
 		};
-	}, [state.theme, state.user, state.isInitializing, state.isAuth, state.notes]);
+	}, [state.theme, state.user, state.isInitializing, state.isAuth]);
 
 	return <AppContext.Provider value={value} {...props} />;
 }

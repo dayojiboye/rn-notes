@@ -10,6 +10,7 @@ import NoteModal from "../components/NoteModal";
 import useGetUserNotes from "../hooks/useGetUserNotes";
 import NoteTile from "../components/NoteTile";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import { Note } from "../types";
 
 export default function NotesListScreen() {
 	const appStore = useStore();
@@ -19,6 +20,7 @@ export default function NotesListScreen() {
 	const [isRefreshing, setIsRefreshing] = React.useState<boolean>(false);
 	const [searchText, setSearchText] = React.useState<string>("");
 	const [isSearching, setIsSearching] = React.useState<boolean>(false);
+	const [currentNote, setCurrentNote] = React.useState<Note | undefined>();
 
 	const fetchUserNotes = useGetUserNotes(() => setIsRefreshing(false), isSearching, searchText);
 
@@ -96,7 +98,16 @@ export default function NotesListScreen() {
 								scrollEnabled={false}
 								data={item.data ? item.data : []}
 								keyExtractor={(_, i) => i.toString()}
-								renderItem={({ item, index }) => <NoteTile note={item} index={index} />}
+								renderItem={({ item, index }) => (
+									<NoteTile
+										note={item}
+										index={index}
+										onPress={() => {
+											setCurrentNote(item);
+											setIsModalVisible(true);
+										}}
+									/>
+								)}
 								style={{ rowGap: 16 }}
 								numColumns={2}
 								columnWrapperStyle={{ columnGap: 16 }}
@@ -171,9 +182,11 @@ export default function NotesListScreen() {
 			</View>
 			<NoteModal
 				isVisible={isModalVisible}
+				currentNote={currentNote}
 				onClose={() => {
 					setShowFloatingButton(true);
 					setIsModalVisible(false);
+					setCurrentNote(undefined);
 					fetchUserNotes.refetch();
 				}}
 			/>

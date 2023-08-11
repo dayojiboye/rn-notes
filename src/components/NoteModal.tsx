@@ -25,13 +25,16 @@ import { StatusBar } from "expo-status-bar";
 import useCreateNoteMutation from "../hooks/useCreateNote";
 import { format as formatDate } from "date-fns";
 import { Note } from "../types";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {
 	isVisible: boolean;
 	onClose: () => void;
+	currentNote: Note | undefined;
 };
 
-export default function NoteModal({ isVisible, onClose }: Props) {
+export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 	const insets = useSafeAreaInsets();
 	const appStore = useStore();
 	const theme = themeConfig(appStore.theme);
@@ -41,12 +44,23 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 	const [isPinned, setIsPinned] = React.useState<boolean>(false);
 
 	const createNote = useCreateNoteMutation(() => setNote(""));
+	const documentId: string = uuidv4();
 
 	const newNote: Note = {
 		content: note,
 		createdDate: formatDate(new Date(), "MMMM YYY"),
 		isPinned,
 		userId: appStore.user?.uid,
+		documentId,
+	};
+
+	const handleCloseModal = () => {
+		onClose?.();
+		setIsPinned(false);
+		if (!note) return;
+		// edit note mutataion goes here
+		if (currentNote?.content) return;
+		createNote.mutate(newNote);
 	};
 
 	// Editor config starts
@@ -95,13 +109,12 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 
 	// Editor config ends
 
-	// React.useEffect(() => {
-	// 	console.log(note);
-	// });
-
-	// React.useEffect(() => {
-	// 	console.log(appStore.notes);
-	// }, [appStore.notes]);
+	React.useEffect(() => {
+		if (currentNote) {
+			setNote(currentNote.content);
+			setIsPinned(currentNote.isPinned);
+		}
+	}, [currentNote]);
 
 	return (
 		<>
@@ -128,12 +141,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 							<FAIcon name="trash-alt" size={20} color={theme.red} />
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => {
-								onClose?.();
-								setIsPinned(false);
-								if (!note) return;
-								createNote.mutate(newNote);
-							}}
+							onPress={handleCloseModal}
 							style={{
 								marginLeft: "auto",
 								backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -166,7 +174,7 @@ export default function NoteModal({ isVisible, onClose }: Props) {
 						<RichEditor
 							// To-Do: should only focus if it's a new note, on editing an existing note it shouldn't focus
 							// Don't focus on android at all! It's having a weird behaviour
-							initialFocus={Platform.OS === "android" ? false : true}
+							initialFocus={currentNote || Platform.OS === "android" ? false : true}
 							initialContentHTML={note}
 							ref={richText}
 							placeholder="Start typing..."

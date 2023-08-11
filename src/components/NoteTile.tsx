@@ -10,13 +10,15 @@ import AntIcon from "react-native-vector-icons/AntDesign";
 type Props = {
 	note: Note;
 	index: number;
+	onPress: () => void;
 };
 
-const NoteTile = React.memo(function NoteTile({ note, index }: Props) {
+const NoteTile = React.memo(function NoteTile({ note, index, onPress }: Props) {
 	const { width } = useWindowDimensions();
 	const colorScheme = React.useMemo(() => palette[index % palette.length], [index]);
 	const appStore = useStore();
 	const appTheme = themeConfig(appStore.theme);
+	// const showDeleteAlert = useDeleteNoteAlert(note.documentId, onRefresh);
 
 	const source: { html: string } = {
 		html: note.content.slice(0, 50),
@@ -25,6 +27,7 @@ const NoteTile = React.memo(function NoteTile({ note, index }: Props) {
 	return (
 		<TouchableOpacity
 			activeOpacity={0.7}
+			onPress={() => onPress?.()}
 			style={{
 				backgroundColor: colorScheme,
 				flex: 1,
