@@ -1,12 +1,4 @@
-import {
-	View,
-	Text,
-	Modal,
-	TouchableOpacity,
-	ScrollView,
-	KeyboardAvoidingView,
-	Platform,
-} from "react-native";
+import { View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MIcon from "react-native-vector-icons/MaterialIcons";
@@ -28,6 +20,7 @@ import { Note } from "../types";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import useUpdateNoteMutation from "../hooks/useUpdateNote";
+import Modal from "react-native-modal";
 
 type Props = {
 	isVisible: boolean;
@@ -123,7 +116,13 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 	return (
 		<>
 			<StatusBar style="auto" />
-			<Modal visible={isVisible} animationType="slide" onRequestClose={handleCloseModal}>
+			<Modal
+				isVisible={isVisible}
+				coverScreen
+				onBackButtonPress={handleCloseModal}
+				hasBackdrop={false}
+				style={{ margin: 0 }}
+			>
 				<View
 					style={{
 						flex: 1,

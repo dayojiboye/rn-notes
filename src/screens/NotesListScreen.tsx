@@ -175,6 +175,7 @@ export default function NotesListScreen() {
 							elevation: 16,
 						}}
 						onPress={() => {
+							Keyboard.dismiss();
 							setShowFloatingButton(false);
 							setIsModalVisible(true);
 						}}
