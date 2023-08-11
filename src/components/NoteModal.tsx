@@ -6,13 +6,7 @@ import themeConfig from "../config/theme";
 import useStore from "../hooks/useStore";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import FAIcon from "react-native-vector-icons/FontAwesome5";
-import {
-	actions,
-	FONT_SIZE,
-	getContentCSS,
-	RichEditor,
-	RichToolbar,
-} from "react-native-pell-rich-editor";
+import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
 import { StatusBar } from "expo-status-bar";
 import useCreateNoteMutation from "../hooks/useCreateNote";
 import { format as formatDate } from "date-fns";
@@ -21,6 +15,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import useUpdateNoteMutation from "../hooks/useUpdateNote";
 import Modal from "react-native-modal";
+import useDeleteNoteAlert from "../hooks/useDeleteNoteAlert";
 
 type Props = {
 	isVisible: boolean;
@@ -37,8 +32,17 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 	const scrollRef = React.useRef<ScrollView>(null);
 	const [isPinned, setIsPinned] = React.useState<boolean>(false);
 
-	const createNote = useCreateNoteMutation(() => setNote(""));
-	const updateNote = useUpdateNoteMutation(() => setNote(""));
+	const onReset = () => {
+		setNote("");
+		setIsPinned(false);
+	};
+
+	const createNote = useCreateNoteMutation(onReset);
+	const updateNote = useUpdateNoteMutation(onReset);
+	const showDeleteAlert = useDeleteNoteAlert(currentNote?.documentId, () => {
+		onClose?.();
+		onReset();
+	});
 	const documentId: string = uuidv4();
 
 	const newNote: Note = {
@@ -51,7 +55,6 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 
 	const handleCloseModal = () => {
 		onClose?.();
-		setIsPinned(false);
 		if (!note) return;
 		if (currentNote) {
 			updateNote.mutate({ content: note, isPinned, documentId: currentNote.documentId });
@@ -68,41 +71,10 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 		});
 	};
 
-	const handleHeightChange = (height: any) => {
-		// console.log("editor height change:", height);
-	};
-
 	const handleCursorPosition = React.useCallback((scrollY: number) => {
 		// Positioning scroll bar
 		scrollRef.current?.scrollTo({ y: scrollY - 30, animated: true });
 	}, []);
-
-	// const handleFontSize = React.useCallback(() => {
-	//   // 1=  10px, 2 = 13px, 3 = 16px, 4 = 18px, 5 = 24px, 6 = 32px, 7 = 48px;
-	//   let size = [1, 2, 3, 4, 5, 6, 7];
-	//   richText.current?.setFontSize(size[XMath.random(size.length - 1)] as FONT_SIZE);
-	// }, []);
-
-	// const handleMessage = React.useCallback(({type, id, data}: {type: string; id: string; data?: any}) => {
-	//   switch (type) {
-	//     case 'ImgClick':
-	//       richText.current?.commandDOM(`$('#${id}').src="${imageList[XMath.random(imageList.length - 1)]}"`);
-	//       break;
-	//     case 'TitleClick':
-	//       const color = ['red', 'blue', 'gray', 'yellow', 'coral'];
-
-	//       // command: $ = document.querySelector
-	//       richText.current?.commandDOM(`$('#${id}').style.color='${color[XMath.random(color.length - 1)]}'`);
-	//       break;
-	//     case 'SwitchImage':
-	//       break;
-	//   }
-	//   console.log('onMessage', type, id, data);
-	// }, []);
-
-	// const handleBlur = React.useCallback(() => {
-	// 	createNote.mutate(newNote);
-	// }, []);
 
 	// Editor config ends
 
@@ -140,9 +112,11 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 						>
 							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={25} color={theme.gold} />
 						</TouchableOpacity>
-						<TouchableOpacity style={{ width: 30, height: 30 }}>
-							<FAIcon name="trash-alt" size={20} color={theme.red} />
-						</TouchableOpacity>
+						{currentNote && note.trim() ? (
+							<TouchableOpacity style={{ width: 30, height: 30 }} onPress={showDeleteAlert}>
+								<FAIcon name="trash-alt" size={20} color={theme.red} />
+							</TouchableOpacity>
+						) : null}
 						<TouchableOpacity
 							onPress={handleCloseModal}
 							style={{
@@ -191,11 +165,9 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 							style={{ minHeight: 300, flex: 1, paddingHorizontal: 20 }}
 							useContainer={true}
 							initialHeight={400}
-							// enterKeyHint="done"
 							pasteAsPlainText={true}
 							autoCapitalize="on"
 							onCursorPosition={handleCursorPosition}
-							// onBlur={handleBlur}
 						/>
 					</ScrollView>
 					<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -203,12 +175,8 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 							style={{ height: 70, backgroundColor: "#ece8e8" }}
 							flatContainerStyle={{ paddingHorizontal: 10 }}
 							editor={richText}
-							// disabled={disabled}
 							iconTint={theme.black}
 							selectedIconTint={theme.gold}
-							// disabledIconTint={theme.muted}
-							// onPressAddImage={onPressAddImage}
-							// onInsertLink={onInsertLink}
 							iconSize={24}
 							iconGap={24}
 							actions={[
@@ -219,43 +187,10 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 								actions.undo,
 								actions.redo,
 								actions.insertOrderedList,
-								// actions.insertVideo,
-								// actions.insertImage,
 								actions.setStrikethrough,
 								actions.insertLink,
-								// actions.checkboxList,
-								// actions.blockquote,
-								// actions.alignLeft,
-								// actions.alignCenter,
-								// actions.alignRight,
-								// actions.code,
-								// actions.line,
-								// actions.foreColor,
-								// actions.hiliteColor,
-								// actions.heading1,
-								// actions.heading4,
-								// "insertEmoji",
-								// "insertHTML",
-								// "fontSize",
 							]} // default defaultActions
-							// iconMap={{
-							//   insertEmoji: phizIcon,
-							//   [actions.foreColor]: () => <Text style={[styles.tib, {color: 'blue'}]}>FC</Text>,
-							//   [actions.hiliteColor]: ({tintColor}: IconRecord) => (
-							//     <Text style={[styles.tib, {color: tintColor, backgroundColor: 'red'}]}>BC</Text>
-							//   ),
-							//   [actions.heading1]: ({tintColor}: IconRecord) => <Text style={[styles.tib, {color: tintColor}]}>H1</Text>,
-							//   [actions.heading4]: ({tintColor}: IconRecord) => <Text style={[styles.tib, {color: tintColor}]}>H4</Text>,
-							//   insertHTML: htmlIcon,
-							// }}
-							// insertEmoji={handleEmoji}
-							// insertHTML={handleInsertHTML}
-							// insertVideo={handleInsertVideo}
-							// fontSize={handleFontSize}
-							// foreColor={handleForeColor}
-							// hiliteColor={handleHaliteColor}
 						/>
-						{/* {emojiVisible && <EmojiView onSelect={handleInsertEmoji} />} */}
 					</KeyboardAvoidingView>
 				</View>
 			</Modal>

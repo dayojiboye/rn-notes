@@ -18,7 +18,6 @@ export default function NoteTile({ note, index, onPress }: Props) {
 	const colorScheme = React.useMemo(() => palette[index % palette.length], [index]);
 	const appStore = useStore();
 	const appTheme = themeConfig(appStore.theme);
-	// const showDeleteAlert = useDeleteNoteAlert(note.documentId, onRefresh);
 
 	const source: { html: string } = {
 		html: note.content.slice(0, 50),
