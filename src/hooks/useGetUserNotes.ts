@@ -1,12 +1,16 @@
 import { useQuery } from "react-query";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import db from "../../firebase/firebaseConfig";
-import { showToast } from "../utils/helpers";
+import { regexToRemoveHtmlTags, showToast } from "../utils/helpers";
 import { toastType } from "../enums";
 import useStore from "./useStore";
 import { Note } from "../types";
 
-export default function useGetUserNotes(onDone?: () => void) {
+export default function useGetUserNotes(
+	onDone?: () => void,
+	isSearching?: boolean,
+	searchText?: string
+) {
 	const appStore = useStore();
 
 	const fetchUserNotes = async () => {
@@ -24,6 +28,19 @@ export default function useGetUserNotes(onDone?: () => void) {
 		},
 		onSettled: () => {
 			onDone?.();
+		},
+		select: (data) => {
+			if (isSearching && searchText) {
+				const searchResult = data.filter((note) =>
+					note.content
+						.replace(regexToRemoveHtmlTags, "")
+						.toLowerCase()
+						.includes(searchText.toLowerCase())
+				);
+				return searchResult;
+			} else {
+				return data;
+			}
 		},
 	});
 }

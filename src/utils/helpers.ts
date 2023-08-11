@@ -1,7 +1,8 @@
 import Toast from "react-native-root-toast";
 import { toastType } from "../enums";
 
-export const mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+export const mailFormat: RegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+export const regexToRemoveHtmlTags: RegExp = /(<([^>]+)>)/gi;
 
 export const showToast = (
 	message: string,

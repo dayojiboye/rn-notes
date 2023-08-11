@@ -17,8 +17,10 @@ export default function NotesListScreen() {
 	const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
 	const [showFloatingButton, setShowFloatingButton] = React.useState<boolean>(true);
 	const [isRefreshing, setIsRefreshing] = React.useState<boolean>(false);
+	const [searchText, setSearchText] = React.useState<string>("");
+	const [isSearching, setIsSearching] = React.useState<boolean>(false);
 
-	const fetchUserNotes = useGetUserNotes(() => setIsRefreshing(false));
+	const fetchUserNotes = useGetUserNotes(() => setIsRefreshing(false), isSearching, searchText);
 
 	const computedNotes = React.useCallback(() => {
 		if (!fetchUserNotes.data || fetchUserNotes.data.length === 0) return [];
@@ -36,6 +38,22 @@ export default function NotesListScreen() {
 		];
 	}, [fetchUserNotes.data]);
 
+	const handleSearch = () => {
+		if (searchText.length > 0) {
+			setIsSearching(true);
+		} else {
+			setIsSearching(false);
+		}
+	};
+
+	// Debounce
+	React.useEffect(() => {
+		const debounceTimer = setTimeout(() => {
+			handleSearch();
+		}, 500);
+		return () => clearTimeout(debounceTimer);
+	}, [searchText]);
+
 	// To-Do: add skeleton loader
 	return (
 		<>
@@ -50,10 +68,10 @@ export default function NotesListScreen() {
 					style={{ backgroundColor: appTheme.primary, paddingHorizontal: 20, gap: 20 }}
 				>
 					<Text style={{ color: appTheme.gold, fontFamily: "sfBold", fontSize: 32 }}>Notes</Text>
-					{fetchUserNotes?.data && fetchUserNotes.data?.length > 0 ? (
+					{(fetchUserNotes?.data && fetchUserNotes.data?.length > 0) || isSearching ? (
 						<CustomTextInput
 							placeholder="Search notes"
-							onChangeText={() => {}}
+							onChangeText={(text) => setSearchText(text)}
 							containerStyle={{
 								borderRadius: 32,
 								height: 60,
@@ -112,7 +130,9 @@ export default function NotesListScreen() {
 										textAlign: "center",
 									}}
 								>
-									You have no note, tap on the "plus" button to get started.
+									{isSearching
+										? "No result found"
+										: `You have no note, tap on the "plus" button to get started.`}
 								</Text>
 							</View>
 						) : null
