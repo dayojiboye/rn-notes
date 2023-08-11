@@ -19,13 +19,13 @@ export default function Home() {
 			screenOptions={{
 				headerShown: false,
 				tabBarShowLabel: false,
-				tabBarStyle: {
-					elevation: 1,
-					shadowColor: "rgba(0, 0, 0, 0.3)",
-					shadowOpacity: 1,
-					shadowRadius: 6,
-					shadowOffset: { width: 1, height: 2 },
-				},
+				// tabBarStyle: {
+				// 	elevation: 1,
+				// 	shadowColor: "rgba(0, 0, 0, 0.3)",
+				// 	shadowOpacity: 1,
+				// 	shadowRadius: 6,
+				// 	shadowOffset: { width: 1, height: 2 },
+				// },
 				// tabBarHideOnKeyboard: true
 			}}
 		>

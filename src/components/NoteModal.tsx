@@ -1,4 +1,12 @@
-import { View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import {
+	View,
+	TouchableOpacity,
+	ScrollView,
+	KeyboardAvoidingView,
+	Platform,
+	Alert,
+	ActivityIndicator,
+} from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MIcon from "react-native-vector-icons/MaterialIcons";
@@ -15,7 +23,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import useUpdateNoteMutation from "../hooks/useUpdateNote";
 import Modal from "react-native-modal";
-import useDeleteNoteAlert from "../hooks/useDeleteNoteAlert";
+import useDeleteNoteMutation from "../hooks/useDeleteNote";
 
 type Props = {
 	isVisible: boolean;
@@ -39,7 +47,7 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 
 	const createNote = useCreateNoteMutation(onReset);
 	const updateNote = useUpdateNoteMutation(onReset);
-	const showDeleteAlert = useDeleteNoteAlert(currentNote?.documentId, () => {
+	const deleteNoteMutation = useDeleteNoteMutation(() => {
 		onClose?.();
 		onReset();
 	});
@@ -55,12 +63,28 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 
 	const handleCloseModal = () => {
 		onClose?.();
+		setIsPinned(false);
 		if (!note) return;
 		if (currentNote) {
 			updateNote.mutate({ content: note, isPinned, documentId: currentNote.documentId });
 			return;
 		}
 		createNote.mutate(newNote);
+	};
+
+	const showDeleteAlert = () => {
+		if (!currentNote?.documentId) return;
+		Alert.alert("Do you want to delete note?", "", [
+			{
+				text: "Proceed",
+				onPress: () => deleteNoteMutation.mutate({ documentId: currentNote.documentId }),
+				style: "destructive",
+			},
+			{
+				text: "Cancel",
+				style: "cancel",
+			},
+		]);
 	};
 
 	// Editor config starts
@@ -112,16 +136,19 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 						>
 							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={25} color={theme.gold} />
 						</TouchableOpacity>
-						{currentNote && note.trim() ? (
+						{deleteNoteMutation.isLoading ? (
+							<ActivityIndicator />
+						) : currentNote && note.trim() ? (
 							<TouchableOpacity style={{ width: 30, height: 30 }} onPress={showDeleteAlert}>
 								<FAIcon name="trash-alt" size={20} color={theme.red} />
 							</TouchableOpacity>
 						) : null}
 						<TouchableOpacity
 							onPress={handleCloseModal}
+							disabled={deleteNoteMutation.isLoading}
 							style={{
 								marginLeft: "auto",
-								backgroundColor: "rgba(0, 0, 0, 0.4)",
+								backgroundColor: deleteNoteMutation.isLoading ? theme.faded : "rgba(0, 0, 0, 0.4)",
 								width: 40,
 								height: 40,
 								borderRadius: 25,
@@ -149,7 +176,6 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 						keyboardDismissMode="none"
 					>
 						<RichEditor
-							// To-Do: should only focus if it's a new note, on editing an existing note it shouldn't focus
 							// Don't focus on android at all! It's having a weird behaviour
 							initialFocus={currentNote || Platform.OS === "android" ? false : true}
 							initialContentHTML={note}
