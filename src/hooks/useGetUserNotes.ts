@@ -22,7 +22,6 @@ export default function useGetUserNotes(
 	};
 
 	return useQuery<Note[]>(["user_notes", appStore.user?.uid], fetchUserNotes, {
-		staleTime: 24 * 60 * 60 * 1000,
 		onError: (err: any) => {
 			showToast(err.message, toastType.ERROR);
 		},

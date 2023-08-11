@@ -13,7 +13,7 @@ type Props = {
 	onPress: () => void;
 };
 
-const NoteTile = React.memo(function NoteTile({ note, index, onPress }: Props) {
+export default function NoteTile({ note, index, onPress }: Props) {
 	const { width } = useWindowDimensions();
 	const colorScheme = React.useMemo(() => palette[index % palette.length], [index]);
 	const appStore = useStore();
@@ -51,6 +51,7 @@ const NoteTile = React.memo(function NoteTile({ note, index, onPress }: Props) {
 						borderRadius: 15,
 						alignItems: "center",
 						justifyContent: "center",
+						zIndex: 1,
 					}}
 				>
 					<AntIcon name="pushpin" size={16} color="#f0eded" />
@@ -63,6 +64,4 @@ const NoteTile = React.memo(function NoteTile({ note, index, onPress }: Props) {
 			/>
 		</TouchableOpacity>
 	);
-});
-
-export default NoteTile;
+}

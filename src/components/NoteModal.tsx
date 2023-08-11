@@ -27,6 +27,7 @@ import { format as formatDate } from "date-fns";
 import { Note } from "../types";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import useUpdateNoteMutation from "../hooks/useUpdateNote";
 
 type Props = {
 	isVisible: boolean;
@@ -44,6 +45,7 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 	const [isPinned, setIsPinned] = React.useState<boolean>(false);
 
 	const createNote = useCreateNoteMutation(() => setNote(""));
+	const updateNote = useUpdateNoteMutation(() => setNote(""));
 	const documentId: string = uuidv4();
 
 	const newNote: Note = {
@@ -58,8 +60,10 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 		onClose?.();
 		setIsPinned(false);
 		if (!note) return;
-		// edit note mutataion goes here
-		if (currentNote?.content) return;
+		if (currentNote) {
+			updateNote.mutate({ content: note, isPinned, documentId: currentNote.documentId });
+			return;
+		}
 		createNote.mutate(newNote);
 	};
 
@@ -119,7 +123,7 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 	return (
 		<>
 			<StatusBar style="auto" />
-			<Modal visible={isVisible} animationType="slide">
+			<Modal visible={isVisible} animationType="slide" onRequestClose={handleCloseModal}>
 				<View
 					style={{
 						flex: 1,

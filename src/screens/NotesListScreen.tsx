@@ -4,7 +4,7 @@ import MIcon from "react-native-vector-icons/MaterialIcons";
 import FIcon from "react-native-vector-icons/Feather";
 import themeConfig from "../config/theme";
 import useStore from "../hooks/useStore";
-import { FlatList, Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, Text, TouchableOpacity, View } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import NoteModal from "../components/NoteModal";
 import useGetUserNotes from "../hooks/useGetUserNotes";
@@ -69,7 +69,10 @@ export default function NotesListScreen() {
 					onPress={() => Keyboard.dismiss()}
 					style={{ backgroundColor: appTheme.primary, paddingHorizontal: 20, gap: 20 }}
 				>
-					<Text style={{ color: appTheme.gold, fontFamily: "sfBold", fontSize: 32 }}>Notes</Text>
+					<View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+						<Text style={{ color: appTheme.gold, fontFamily: "sfBold", fontSize: 32 }}>Notes</Text>
+						{fetchUserNotes.isRefetching && !isRefreshing ? <ActivityIndicator /> : null}
+					</View>
 					{(fetchUserNotes?.data && fetchUserNotes.data?.length > 0) || isSearching ? (
 						<CustomTextInput
 							placeholder="Search notes"
@@ -98,12 +101,12 @@ export default function NotesListScreen() {
 								scrollEnabled={false}
 								data={item.data ? item.data : []}
 								keyExtractor={(_, i) => i.toString()}
-								renderItem={({ item, index }) => (
+								renderItem={({ item: note, index }) => (
 									<NoteTile
-										note={item}
+										note={note}
 										index={index}
 										onPress={() => {
-											setCurrentNote(item);
+											setCurrentNote(note);
 											setIsModalVisible(true);
 										}}
 									/>
@@ -187,7 +190,6 @@ export default function NotesListScreen() {
 					setShowFloatingButton(true);
 					setIsModalVisible(false);
 					setCurrentNote(undefined);
-					fetchUserNotes.refetch();
 				}}
 			/>
 		</>
