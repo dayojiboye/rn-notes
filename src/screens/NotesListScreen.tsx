@@ -21,7 +21,7 @@ export default function NotesListScreen() {
 	const fetchUserNotes = useGetUserNotes(() => setIsRefreshing(false));
 
 	const computedNotes = React.useCallback(() => {
-		if (!fetchUserNotes.data) return [];
+		if (!fetchUserNotes.data || fetchUserNotes.data.length === 0) return [];
 		const pinnedNotes = fetchUserNotes.data?.filter((n) => n.isPinned);
 		const unpinnedNotes = fetchUserNotes.data?.filter((n) => !n.isPinned);
 		return [
@@ -30,7 +30,7 @@ export default function NotesListScreen() {
 				data: pinnedNotes,
 			},
 			{
-				title: "Notes",
+				title: "Others",
 				data: unpinnedNotes,
 			},
 		];
@@ -41,7 +41,7 @@ export default function NotesListScreen() {
 		<>
 			<CustomAppBar
 				trailIcon={MIcon}
-				trailIconProps={{ name: "more-vert", size: 36, color: appTheme.gold }}
+				trailIconProps={{ name: "more-vert", size: 30, color: appTheme.gold }}
 			/>
 			<View style={{ backgroundColor: appTheme.primary, flex: 1, position: "relative" }}>
 				<TouchableOpacity
@@ -100,17 +100,34 @@ export default function NotesListScreen() {
 						setIsRefreshing(true);
 						fetchUserNotes.refetch();
 					}}
+					ListEmptyComponent={() =>
+						!fetchUserNotes.isLoading ? (
+							<View style={{ marginTop: 32, alignItems: "center", justifyContent: "center" }}>
+								<Text
+									style={{
+										color: appTheme.placeholder,
+										fontSize: 18,
+										fontFamily: "sfMedium",
+										lineHeight: 28,
+										textAlign: "center",
+									}}
+								>
+									You have no note, tap on the "plus" button to get started.
+								</Text>
+							</View>
+						) : null
+					}
 				/>
 				{showFloatingButton && !fetchUserNotes.isLoading ? (
 					<TouchableOpacity
 						activeOpacity={0.7}
 						style={{
 							position: "absolute",
-							bottom: 72,
+							bottom: 30,
 							right: 20,
 							backgroundColor: appTheme.gold,
-							width: 68,
-							height: 68,
+							width: 60,
+							height: 60,
 							borderRadius: 34,
 							alignItems: "center",
 							justifyContent: "center",

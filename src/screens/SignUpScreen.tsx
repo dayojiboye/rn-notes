@@ -96,6 +96,7 @@ export default function SignUpScreen({ navigation }: Props) {
 						placeholder="Enter Your E-mail"
 						onChangeText={(value: string) => handleChange("email", value)}
 						autoCapitalize="none"
+						keyboardType="email-address"
 					/>
 					<CustomTextInput
 						placeholder="Enter Your Password"
