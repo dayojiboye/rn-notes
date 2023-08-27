@@ -61,7 +61,7 @@ export default function NotesListScreen() {
 		<>
 			<CustomAppBar
 				trailIcon={MIcon}
-				trailIconProps={{ name: "more-vert", size: 30, color: appTheme.gold }}
+				trailIconProps={{ name: "more-vert", size: 28, color: appTheme.gold }}
 			/>
 			<View style={{ backgroundColor: appTheme.primary, flex: 1, position: "relative" }}>
 				<TouchableOpacity
@@ -70,8 +70,10 @@ export default function NotesListScreen() {
 					style={{ backgroundColor: appTheme.primary, paddingHorizontal: 20, gap: 20 }}
 				>
 					<View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-						<Text style={{ color: appTheme.gold, fontFamily: "sfBold", fontSize: 32 }}>Notes</Text>
-						{fetchUserNotes.isRefetching && !isRefreshing ? <ActivityIndicator /> : null}
+						<Text style={{ color: appTheme.gold, fontFamily: "sfBold", fontSize: 28 }}>Notes</Text>
+						{fetchUserNotes.isRefetching && !isRefreshing ? (
+							<ActivityIndicator color={appTheme.gold} />
+						) : null}
 					</View>
 					{(fetchUserNotes?.data && fetchUserNotes.data?.length > 0) || isSearching ? (
 						<CustomTextInput

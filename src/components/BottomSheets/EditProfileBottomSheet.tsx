@@ -29,11 +29,11 @@ const EditProfileBottomSheet = React.forwardRef(
 
 		React.useEffect(() => {
 			const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
-				setSnapPoints(["80%"]);
+				setSnapPoints(["60%"]);
 			});
 
 			const keyboardWillShowListener = Keyboard.addListener("keyboardWillShow", () => {
-				setSnapPoints(["80%"]);
+				setSnapPoints(["60%"]);
 			});
 
 			const keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", () => {

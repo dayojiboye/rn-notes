@@ -106,6 +106,9 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 		if (currentNote) {
 			setNote(currentNote.content);
 			setIsPinned(currentNote.isPinned);
+		} else {
+			setNote("");
+			setIsPinned(false);
 		}
 	}, [currentNote]);
 

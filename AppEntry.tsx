@@ -68,7 +68,7 @@ export default function AppEntry() {
 					const userData: UserData = JSON.parse(JSON.stringify(data.data()));
 					appStore.loginUser(userData);
 				} else {
-					__DEV__ && console.log("No user found!");
+					__DEV__ && console.log("No user logged in!");
 				}
 			},
 			onError: (err: any) => {
