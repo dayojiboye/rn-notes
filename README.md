@@ -14,6 +14,6 @@ A note app with Firebase authentication and Firebase Firestore
 </p>
 <p float="left">
   <img src="https://raw.githubusercontent.com/dayojiboye/rn-notes /master/screenshots/shot6.png" width="250" />
-  <img src="https://raw.githubusercontent.com/dayojiboye/rn-notes /master/screenshots/shot7-iOS.png" width="250" />
+  <img src="https://raw.githubusercontent.com/dayojiboye/rn-notes /master/screenshots/shot7.png" width="250" />
   <img src="https://raw.githubusercontent.com/dayojiboye/rn-notes /master/screenshots/shot8.png" width="250" />
 </p>

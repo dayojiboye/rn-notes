@@ -140,7 +140,7 @@ export default function NoteModal({ isVisible, onClose, currentNote }: Props) {
 							<AntIcon name={isPinned ? "pushpin" : "pushpino"} size={25} color={theme.gold} />
 						</TouchableOpacity>
 						{deleteNoteMutation.isLoading ? (
-							<ActivityIndicator />
+							<ActivityIndicator color={theme.gold} />
 						) : currentNote && note.trim() ? (
 							<TouchableOpacity style={{ width: 30, height: 30 }} onPress={showDeleteAlert}>
 								<FAIcon name="trash-alt" size={20} color={theme.red} />
