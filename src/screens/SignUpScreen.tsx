@@ -14,6 +14,7 @@ import useSignUpMutation from "../hooks/useSignUp";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import AvatarsBottomSheet from "../components/BottomSheets/AvatarsBottomSheet";
+import AntIcon from "react-native-vector-icons/AntDesign";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Signup">;
 
@@ -33,6 +34,7 @@ export default function SignUpScreen({ navigation }: Props) {
 		!formValues.email.trim() ||
 		!formValues.email.trim().match(mailFormat) ||
 		!formValues.password.trim() ||
+		formValues.password.trim().length < 6 ||
 		!formValues.avatar;
 
 	const signupMutation = useSignUpMutation(formValues.name, formValues.avatar);
@@ -98,11 +100,19 @@ export default function SignUpScreen({ navigation }: Props) {
 						autoCapitalize="none"
 						keyboardType="email-address"
 					/>
-					<CustomTextInput
-						placeholder="Enter Your Password"
-						onChangeText={(value: string) => handleChange("password", value)}
-						isPassword
-					/>
+					<View style={{ gap: 5 }}>
+						<CustomTextInput
+							placeholder="Enter Your Password"
+							onChangeText={(value: string) => handleChange("password", value)}
+							isPassword
+						/>
+						<View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
+							<AntIcon name="exclamationcircleo" color={theme.gold} size={12} />
+							<Text style={{ fontFamily: "sf", fontSize: 12, color: theme.gold }}>
+								Password should be at least 6 characters
+							</Text>
+						</View>
+					</View>
 					<TouchableOpacity
 						activeOpacity={0.8}
 						style={{

@@ -13,6 +13,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import useSignInMutation from "../hooks/useSignIn";
 import { Dimensions } from "react-native";
+import AntIcon from "react-native-vector-icons/AntDesign";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -28,7 +29,8 @@ export default function LoginScreen({ navigation }: Props) {
 	const isDisabled: boolean =
 		!formValues.email.trim() ||
 		!formValues.email.trim().match(mailFormat) ||
-		!formValues.password.trim();
+		!formValues.password.trim() ||
+		formValues.password.trim().length < 6;
 
 	const handleChange = (name: string, value: string) => {
 		setFormValues({
@@ -83,11 +85,19 @@ export default function LoginScreen({ navigation }: Props) {
 						autoCapitalize="none"
 						keyboardType="email-address"
 					/>
-					<CustomTextInput
-						placeholder="Enter Your Password"
-						onChangeText={(value: string) => handleChange("password", value)}
-						isPassword
-					/>
+					<View style={{ gap: 5 }}>
+						<CustomTextInput
+							placeholder="Enter Your Password"
+							onChangeText={(value: string) => handleChange("password", value)}
+							isPassword
+						/>
+						<View style={{ flexDirection: "row", gap: 5, alignItems: "center" }}>
+							<AntIcon name="exclamationcircleo" color={theme.gold} size={12} />
+							<Text style={{ fontFamily: "sf", fontSize: 12, color: theme.gold }}>
+								Password should be at least 6 characters
+							</Text>
+						</View>
+					</View>
 					<CustomButton
 						label="Submit"
 						disabled={isDisabled}
